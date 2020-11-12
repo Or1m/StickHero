@@ -3,6 +3,9 @@ package com.example.stickhero;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -16,7 +19,7 @@ public class MainActivity extends BaseActivity {
     ImageButton settings;
     ImageButton shop;
 
-    MediaPlayer mediaPlayer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +31,6 @@ public class MainActivity extends BaseActivity {
         sound = findViewById(R.id.sound);
         settings = findViewById(R.id.settings);
         shop = findViewById(R.id.shop);
-
-        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.click);
 
         setUpListeners();
     }
@@ -43,7 +44,11 @@ public class MainActivity extends BaseActivity {
                 if (processEvent(view, motionEvent, play)) {
                     play.clearColorFilter();
                     play.invalidate();
-                    mediaPlayer.start();
+                    if (!muted)
+                        mediaPlayer.start();
+
+                    Intent gameIntent = new Intent(MainActivity.this, GameActivity.class);
+                    startActivity(gameIntent);
                 }
                 return true;
             }
@@ -55,7 +60,11 @@ public class MainActivity extends BaseActivity {
                 if (processEvent(view, motionEvent, about)) {
                     about.clearColorFilter();
                     about.invalidate();
-                    mediaPlayer.start();
+                    if(!muted)
+                        mediaPlayer.start();
+
+                    Intent aboutIntent = new Intent(MainActivity.this, AboutActivity.class);
+                    startActivity(aboutIntent);
                 }
                 return true;
             }
@@ -67,7 +76,14 @@ public class MainActivity extends BaseActivity {
                 if (processEvent(view, motionEvent, sound)) {
                     sound.clearColorFilter();
                     sound.invalidate();
-                    mediaPlayer.start();
+
+                    muted = !muted;
+
+                    if(!muted)
+                        mediaPlayer.start();
+                    else
+                        sound.setColorFilter(Color.argb(100, 0, 0, 0), PorterDuff.Mode.SRC_ATOP);
+
                 }
                 return true;
             }
@@ -79,7 +95,8 @@ public class MainActivity extends BaseActivity {
                 if (processEvent(view, motionEvent, settings)) {
                     settings.clearColorFilter();
                     settings.invalidate();
-                    mediaPlayer.start();
+                    if(!muted)
+                        mediaPlayer.start();
                 }
                 return true;
             }
@@ -90,7 +107,8 @@ public class MainActivity extends BaseActivity {
                 if (processEvent(view, motionEvent, shop)) {
                     shop.clearColorFilter();
                     shop.invalidate();
-                    mediaPlayer.start();
+                    if(!muted)
+                        mediaPlayer.start();
                 }
                 return true;
             }

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,11 +13,16 @@ import android.widget.ImageView;
 
 public class BaseActivity extends AppCompatActivity {
     private boolean touchStayedWithinViewBounds;
+    MediaPlayer mediaPlayer;
+
+    static Boolean muted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
+
+        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.click);
     }
 
     protected boolean processEvent(View view, MotionEvent motionEvent, ImageView img) {
