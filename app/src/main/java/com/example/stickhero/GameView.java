@@ -6,31 +6,31 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.widget.Toast;
 
+@SuppressLint("ViewConstructor")
 public class GameView extends SurfaceView implements Runnable {
 
-    private Thread thread;
-    private boolean isPlaying;
-    private int screenX, screenY;
-    private Paint paint;
-    private Player player;
-    private Background backgroundOne, backgroundTwo;
+    private final double gravity = 0.2;
+    private final int screenX, screenY;
 
-    public Point lineTop;
-    public int groundTop;
+    private Thread thread;
+    private boolean isRunning;
+
+    private Paint paint;
+    private Point lineTop;
+
+    private Background[] background;
+    private Player player;
+
+    private int groundTop;
+    private double alpha = 0;
 
     boolean isGrowing;
     boolean isFalling;
     boolean isLyingDown;
-    boolean isWalking;
-
-    double alpha = 0;
-
-    double gravity = 0.2;
 
     public GameView(Context context, int screenX, int screenY) {
         super(context);
@@ -45,15 +45,17 @@ public class GameView extends SurfaceView implements Runnable {
 
         lineTop = new Point(195, groundTop);
 
-        this.backgroundOne = new Background(this.screenX, this.screenY, getResources());
-        this.backgroundTwo = new Background(this.screenX, this.screenY, getResources());
+        background = new Background[] {
+                new Background(this.screenX, this.screenY, getResources()),
+                new Background(this.screenX, this.screenY, getResources())
+        };
 
-        this.backgroundTwo.x = this.screenX;
+        background[1].x = this.screenX;
     }
 
     @Override
     public void run() {
-        while (isPlaying) {
+        while (isRunning) {
             update();
             draw();
             sleep();
@@ -61,17 +63,17 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void update() {
-        if(isWalking) {
-            backgroundOne.x -= 10;
-            backgroundTwo.x -= 10;
+        if(player.isWalking()) {
+            background[0].x -= 10;
+            background[1].x -= 10;
         }
 
-        if(backgroundOne.x + backgroundOne.background.getWidth() < 0) {
-            backgroundOne.x = screenX;
+        if(background[0].x + background[0].background.getWidth() < 0) {
+            background[0].x = screenX;
         }
 
-        if(backgroundTwo.x + backgroundTwo.background.getWidth() < 0) {
-            backgroundTwo.x = screenX;
+        if(background[1].x + background[1].background.getWidth() < 0) {
+            background[1].x = screenX;
         }
 
         if(isGrowing)
@@ -90,12 +92,12 @@ public class GameView extends SurfaceView implements Runnable {
         }
 
         if(isLyingDown && lineTop.x > 700 && lineTop.x < 1000 && player.x < lineTop.x) {
-            isWalking = true;
+            player.setWalking(true);
             player.x += 10;
         }
 
         if(player.x >= lineTop.x)
-            isWalking = false;
+            player.setWalking(false);
     }
 
     static Point rotateLineClockWise(Point center, Point edge, double angle) {
@@ -108,8 +110,8 @@ public class GameView extends SurfaceView implements Runnable {
         if(getHolder().getSurface().isValid()) {
             Canvas canvas = getHolder().lockCanvas();
 
-            canvas.drawBitmap(backgroundOne.background, backgroundOne.x, backgroundOne.y, paint);
-            canvas.drawBitmap(backgroundTwo.background, backgroundTwo.x, backgroundTwo.y, paint);
+            canvas.drawBitmap(background[0].background, background[0].x, background[0].y, paint);
+            canvas.drawBitmap(background[1].background, background[1].x, background[1].y, paint);
 
             groundTop = player.y + player.height - 30;
             Rect rect = new Rect(0, groundTop, 200, screenY);
@@ -136,14 +138,14 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     public void resume() {
-        isPlaying = true;
+        isRunning = true;
         thread = new Thread(this);
         thread.start();
     }
 
     public void pause() {
         try {
-            isPlaying = false;
+            isRunning = false;
             thread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();

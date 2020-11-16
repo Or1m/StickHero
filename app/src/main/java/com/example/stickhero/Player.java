@@ -10,6 +10,8 @@ public class Player {
     Bitmap mainSprite;
     Bitmap[] runAnimation;
 
+    private boolean isWalking;
+
     Player(int screenY, Resources res) {
         mainSprite = BitmapFactory.decodeResource(res, R.drawable.idle);
 
@@ -24,5 +26,14 @@ public class Player {
 
     Bitmap getPlayer() {
         return mainSprite;
+    }
+
+    // Getters & setters
+    public boolean isWalking() {
+        return isWalking;
+    }
+
+    public void setWalking(boolean walking) {
+        isWalking = walking;
     }
 }
