@@ -1,4 +1,4 @@
-package com.example.stickhero;
+package com.example.stickhero.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+
+import com.example.stickhero.R;
 
 public class BaseActivity extends AppCompatActivity {
     private boolean touchStayedWithinViewBounds;

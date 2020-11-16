@@ -1,9 +1,11 @@
-package com.example.stickhero;
+package com.example.stickhero.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Point;
 import android.os.Bundle;
+
+import com.example.stickhero.GameView;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -24,12 +26,12 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        gameView.resume();
+        gameView.onResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        gameView.pause();
+        gameView.onPause();
     }
 }

@@ -1,4 +1,4 @@
-package com.example.stickhero;
+package com.example.stickhero.Activities;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -6,11 +6,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
+
+import com.example.stickhero.R;
 
 public class MainActivity extends BaseActivity {
     ImageButton play;
