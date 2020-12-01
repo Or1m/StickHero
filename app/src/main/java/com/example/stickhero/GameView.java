@@ -3,11 +3,13 @@ package com.example.stickhero;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.stickhero.Behaviour.Drawable;
@@ -17,10 +19,13 @@ import com.example.stickhero.GameClasses.Ground;
 import com.example.stickhero.GameClasses.Player;
 import com.example.stickhero.GameClasses.Stick;
 
+import java.util.Set;
+
 @SuppressLint("ViewConstructor")
 public class GameView extends SurfaceView implements Runnable {
 
     private Paint paint;
+    private Paint textPaint;
     private Canvas canvas;
 
     private Thread thread;
@@ -34,12 +39,18 @@ public class GameView extends SurfaceView implements Runnable {
 
     private long lastTime;
 
+    private int score;
+
     Drawable[] drawables;
 
     public GameView(Context context) {
         super(context);
 
         this.paint = new Paint();
+        this.textPaint = new Paint();
+        this.textPaint.setTextSize(150);
+        this.textPaint.setColor(Color.WHITE);
+        textPaint.setTextAlign(Paint.Align.CENTER);
 
         this.ground = new Ground();
         this.player = Player.getInstance(ground, getResources());
@@ -54,8 +65,6 @@ public class GameView extends SurfaceView implements Runnable {
         this.backgrounds[1].setX(SettingsManager.getInstance().getScreenX());
 
         drawables = new Drawable[]{ backgrounds[0], backgrounds[1], ground, dest, stick, player };
-
-
     }
 
 
@@ -71,6 +80,11 @@ public class GameView extends SurfaceView implements Runnable {
             update(deltaTime);
             draw();
             sleep();
+
+            if(player.isScored()) {
+                score++;
+                player.setScored(false);
+            }
         }
     }
 
@@ -91,6 +105,8 @@ public class GameView extends SurfaceView implements Runnable {
 
             for(Drawable d : drawables)
                 d.draw(canvas, paint);
+
+            canvas.drawText(String.valueOf(score), (float) SettingsManager.getInstance().getScreenX() / 2, 400, textPaint);
 
             getHolder().unlockCanvasAndPost(canvas);
         }

@@ -29,6 +29,10 @@ public class Player implements Drawable {
 
     private static Player instance = null;
 
+
+
+    private boolean scored;
+
     public static Player getInstance(Ground ground, Resources res)  {
         if (instance == null)
             instance = new Player(ground, res);
@@ -110,6 +114,7 @@ public class Player implements Drawable {
         if(this.x >= stopPosition && !isInFinish) {
             this.setWalking(false);
             this.isInFinish = true;
+            this.scored = true;
         }
     }
 
@@ -178,5 +183,12 @@ public class Player implements Drawable {
         return isInFinish;
     }
 
+    public boolean isScored() {
+        return scored;
+    }
+
+    public void setScored(boolean scored) {
+        this.scored = scored;
+    }
     //endregion
 }
