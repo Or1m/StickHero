@@ -6,18 +6,36 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
+import com.example.stickhero.Behaviour.Drawable;
 import com.example.stickhero.R;
+import com.example.stickhero.SettingsManager;
 
-public class Background {
+public class Background implements Drawable {
 
     int x = 0;
     int y = 0;
 
     private Bitmap background;
 
-    public Background(int screenX, int screenY, Resources res) {
+    public Background(Resources res)
+    {
         this.background = BitmapFactory.decodeResource(res, R.drawable.background2);
-        this.background = Bitmap.createScaledBitmap(background, screenX, screenY, false);
+        this.background = Bitmap.createScaledBitmap(background,
+                SettingsManager.getInstance().getScreenX(),
+                SettingsManager.getInstance().getScreenY(), false);
+    }
+
+    @Override
+    public void draw(Canvas canvas, Paint paint) {
+        canvas.drawBitmap(this.background, this.x, this.y, paint);
+    }
+
+    public void update() {
+        if (Player.getInstance().isWalking())
+            this.moveX(-10);
+
+        if (this.isNotVisible())
+            this.setX(SettingsManager.getInstance().getScreenX());
     }
 
 
@@ -48,17 +66,5 @@ public class Background {
 
     public void setY(int y) {
         this.y = y;
-    }
-
-    public void draw(Canvas canvas, Paint paint) {
-        canvas.drawBitmap(this.background, this.x, this.y, paint);
-    }
-
-    public void update(Player player, int screenX) {
-        if (player.isWalking())
-            this.moveX(-10);
-
-        if (this.isNotVisible())
-            this.setX(screenX);
     }
 }

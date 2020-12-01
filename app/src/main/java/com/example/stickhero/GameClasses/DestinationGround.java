@@ -4,7 +4,10 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-public class DestinationGround {
+import com.example.stickhero.Behaviour.Drawable;
+import com.example.stickhero.SettingsManager;
+
+public class DestinationGround implements Drawable {
 
     int startX, endX;
 
@@ -13,6 +16,11 @@ public class DestinationGround {
         this.endX = endX;
     }
 
+    @Override
+    public void draw(Canvas canvas, Paint paint) {
+        Rect finish = new Rect(this.startX, Player.getInstance().getPlayerBottom(), this.endX, SettingsManager.getInstance().getScreenY());
+        canvas.drawRect(finish, paint);
+    }
 
     public boolean isInBounds(int pointX) {
         return pointX > startX && pointX < endX;
@@ -25,10 +33,5 @@ public class DestinationGround {
 
     public int getEndX() {
         return endX;
-    }
-
-    public void draw(Canvas canvas, Paint paint, int groundTop, int screenY) {
-        Rect finish = new Rect(this.startX, groundTop, this.endX, screenY);
-        canvas.drawRect(finish, paint);
     }
 }

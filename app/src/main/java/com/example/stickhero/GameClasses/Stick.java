@@ -4,14 +4,16 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 
+import com.example.stickhero.Behaviour.Drawable;
+import com.example.stickhero.SettingsManager;
 import com.example.stickhero.Utils;
 
-public class Stick {
+public class Stick implements Drawable {
 
     private Point start;
     private Point end;
 
-    private int width;
+    private final int width = 10;
 
     private double alpha = 0;
 
@@ -19,20 +21,20 @@ public class Stick {
     private boolean isFalling;
     private boolean isLyingDown;
 
-    public Stick(Point start, Point end, int width) {
-        this.start = start;
-        this.end = end;
-        this.width = width;
+    public Stick() {
+        this.start = new Point(SettingsManager.getInstance().getGroundWidth(), Player.getInstance().getPlayerBottom());
+        this.end = new Point(this.start);
 
         this.start.x -= width / 2;
         this.end.x -= width / 2;
     }
 
 
-    public void update(int groundTop, double gravity) {
+    public void update() {
         if(this.isGrowing)
             this.moveEndY(-20);
 
+        int groundTop = Player.getInstance().getPlayerBottom();
         if(this.end.y > groundTop) {
             this.end.y = groundTop;
 
@@ -42,13 +44,14 @@ public class Stick {
 
         if(this.isFalling()) {
             this.rotate(alpha);
-            alpha += gravity;
+            alpha += SettingsManager.getInstance().getGravity();
         }
     }
 
-    public void draw(Canvas canvas, Paint paint, int groundTop) {
+    @Override
+    public void draw(Canvas canvas, Paint paint) {
         paint.setStrokeWidth(this.width);
-        canvas.drawLine(this.start.x, groundTop, this.end.x, this.end.y, paint);
+        canvas.drawLine(this.start.x, Player.getInstance().getPlayerBottom(), this.end.x, this.end.y, paint);
     }
 
 

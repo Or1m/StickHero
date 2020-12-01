@@ -10,18 +10,15 @@ import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.widget.Toast;
 
+import com.example.stickhero.Behaviour.Drawable;
 import com.example.stickhero.GameClasses.Background;
 import com.example.stickhero.GameClasses.DestinationGround;
+import com.example.stickhero.GameClasses.Ground;
 import com.example.stickhero.GameClasses.Player;
 import com.example.stickhero.GameClasses.Stick;
 
 @SuppressLint("ViewConstructor")
 public class GameView extends SurfaceView implements Runnable {
-
-    private final double gravity = 0.2;
-    private final int groundWidth = 200;
-    private final int groundTop;
-    private final int screenX, screenY;
 
     private Paint paint;
     private Canvas canvas;
@@ -32,29 +29,28 @@ public class GameView extends SurfaceView implements Runnable {
     private Background[] backgrounds;
     private Player player;
     private Stick stick;
+    private Ground ground;
     private DestinationGround dest;
 
+    Drawable[] drawables;
 
-    public GameView(Context context, int screenX, int screenY) {
+
+    public GameView(Context context) {
         super(context);
-
-        this.screenX = screenX;
-        this.screenY = screenY;
 
         this.paint = new Paint();
 
-        this.player = new Player(this.screenY, getResources());
-        this.groundTop = player.getPlayerBottom();
+        this.player = Player.getInstance(getResources());
 
-        this.stick = new Stick(new Point(groundWidth, groundTop), new Point(groundWidth, groundTop), 10);
+        this.stick = new Stick();
+        this.ground = new Ground();
         this.dest = new DestinationGround(700, 1000); //TODO bude sa generovat za chodu
 
-        this.backgrounds = new Background[] {
-                new Background(this.screenX, this.screenY, getResources()),
-                new Background(this.screenX, this.screenY, getResources())
-        };
 
-        this.backgrounds[1].setX(this.screenX);
+        this.backgrounds = new Background[] { new Background(getResources()), new Background(getResources()) };
+        this.backgrounds[1].setX(SettingsManager.getInstance().getScreenX());
+
+        drawables = new Drawable[]{ backgrounds[0], backgrounds[1], ground, dest, stick, player };
     }
 
 
@@ -69,34 +65,18 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void update() {
         for (Background b : this.backgrounds)
-            b.update(player, screenX);
+            b.update();
 
-        stick.update(groundTop, gravity);
+        stick.update();
         player.update(stick, dest);
     }
 
     private void draw() {
-        Point stickEnd = stick.getEnd();
-
         if(getHolder().getSurface().isValid()) {
             canvas = getHolder().lockCanvas();
 
-            for(Background b : backgrounds) {
-                b.draw(canvas, this.paint);
-            }
-
-            //TODO lepsie vymysliet rectangle asi posielat canvas a metodu draw v triedach
-            //TODO interface na draw a update, zjednotit parametre, mozno singleton na top a y aby sa dali volat v cykle
-            //TODO Predok Ground
-            Rect rect = new Rect(0, groundTop, groundWidth, screenY);
-            canvas.drawRect(rect, paint);
-
-            dest.draw(canvas, paint, groundTop, screenY);
-
-            stick.draw(canvas, paint, groundTop);
-
-            player.draw(canvas, paint);
-
+            for(Drawable d : drawables)
+                d.draw(canvas, paint);
 
             getHolder().unlockCanvasAndPost(canvas);
         }

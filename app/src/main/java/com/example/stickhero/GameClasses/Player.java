@@ -7,9 +7,11 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 
+import com.example.stickhero.Behaviour.Drawable;
 import com.example.stickhero.R;
+import com.example.stickhero.SettingsManager;
 
-public class Player {
+public class Player implements Drawable {
 
     Bitmap mainSprite;
     Bitmap[] runAnimation;
@@ -17,7 +19,23 @@ public class Player {
     private int x, y, width, height;
     private boolean isWalking;
 
-    public Player(int screenY, Resources res) {
+    private static Player instance = null;
+
+    public static Player getInstance(Resources res)  {
+        if (instance == null)
+            instance = new Player(res);
+
+        return instance;
+    }
+
+    public static Player getInstance()  {
+        if (instance == null)
+            instance = new Player(null);
+
+        return instance;
+    }
+
+    private Player(Resources res) {
         mainSprite = BitmapFactory.decodeResource(res, R.drawable.idle);
 
         width = mainSprite.getWidth() / 5;
@@ -25,7 +43,7 @@ public class Player {
 
         mainSprite = Bitmap.createScaledBitmap(mainSprite, width, height, false);
 
-        y = (int) (screenY / 1.7);
+        y = (int) (SettingsManager.getInstance().getScreenY() / 1.7);
         x = 32;
     }
 
@@ -42,6 +60,7 @@ public class Player {
             this.setWalking(false);
     }
 
+    @Override
     public void draw(Canvas canvas, Paint paint) {
         canvas.drawBitmap(this.mainSprite, this.x, this.y, paint);
     }

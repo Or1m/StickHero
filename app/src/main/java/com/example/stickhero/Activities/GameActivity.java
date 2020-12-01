@@ -19,9 +19,7 @@ public class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        DisplayMetrics dm = Resources.getSystem().getDisplayMetrics();
-        gameView = new GameView(this, dm.widthPixels, dm.heightPixels);
-
+        gameView = new GameView(this);
         setContentView(gameView);
     }
 
