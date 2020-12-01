@@ -32,8 +32,9 @@ public class GameView extends SurfaceView implements Runnable {
     private Ground ground;
     private DestinationGround dest;
 
-    Drawable[] drawables;
+    private long lastTime;
 
+    Drawable[] drawables;
 
     public GameView(Context context) {
         super(context);
@@ -53,27 +54,35 @@ public class GameView extends SurfaceView implements Runnable {
         this.backgrounds[1].setX(SettingsManager.getInstance().getScreenX());
 
         drawables = new Drawable[]{ backgrounds[0], backgrounds[1], ground, dest, stick, player };
+
+
     }
 
 
     @Override
     public void run() {
+        lastTime = System.nanoTime();
+
         while (isRunning) {
-            update();
+            long time = System.nanoTime();
+            int deltaTime = (int) ((time - lastTime) / 1000000);
+            lastTime = time;
+
+            update(deltaTime);
             draw();
             sleep();
         }
     }
 
-    private void update() {
+    private void update(int deltaTime) {
         for (Background b : this.backgrounds)
-            b.update();
+            b.update(deltaTime);
 
-        stick.update();
-        ground.update();
-        dest.update();
+        stick.update(deltaTime);
+        ground.update(deltaTime);
+        dest.update(deltaTime);
 
-        player.update(stick, dest);
+        player.update(stick, dest, backgrounds, deltaTime);
     }
 
     private void draw() {

@@ -62,7 +62,7 @@ public class Player implements Drawable {
     }
 
 
-    public void update(Stick stick, DestinationGround dest) {
+    public void update(Stick stick, DestinationGround dest, Background[] backgrounds, int deltaTime) {
         Point stickEnd = stick.getEnd();
 
         if(!backOnStart) {
@@ -71,7 +71,7 @@ public class Player implements Drawable {
         }
 
         if(isInFinish && this.x > offset) {
-            this.moveX(-20);
+            this.moveX((int)(-SettingsManager.getInstance().getMovingSpeed() * deltaTime));
             return;
         }
 
@@ -88,7 +88,7 @@ public class Player implements Drawable {
 
         if(stick.isLyingDown() && !dest.isInBounds(stickEnd.x) && (this.x + width / 3) < stick.getEnd().x) {
             this.setWalking(true);
-            this.moveX(15);
+            this.moveX((int)(SettingsManager.getInstance().getMovingSpeed() * deltaTime));
             isGoingToFall = true;
             return;
         }
@@ -104,7 +104,7 @@ public class Player implements Drawable {
 
         if(stick.isLyingDown() && dest.isInBounds(stickEnd.x) && this.x < stopPosition) {
             this.setWalking(true);
-            this.moveX(15);
+            this.moveX((int)(SettingsManager.getInstance().getMovingSpeed() * deltaTime));
         }
 
         if(this.x >= stopPosition && !isInFinish) {

@@ -14,6 +14,8 @@ public class SettingsManager {
     private final int destMinWidth = 30;
     private final int destMaxWidth = 250;
 
+    private final double movingSpeed = 0.7;
+
     private SettingsManager() {
         DisplayMetrics dm = Resources.getSystem().getDisplayMetrics();
         this.screenX = dm.widthPixels;
@@ -51,5 +53,9 @@ public class SettingsManager {
 
     public int getDestMaxWidth() {
         return destMaxWidth;
+    }
+
+    public double getMovingSpeed() {
+        return movingSpeed;
     }
 }

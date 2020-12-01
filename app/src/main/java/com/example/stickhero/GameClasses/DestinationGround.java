@@ -17,10 +17,10 @@ public class DestinationGround implements Drawable {
         reset();
     }
 
-    public void update() {
+    public void update(int deltaTime) {
         if(Player.getInstance().isInFinish()) {
-            startX -= 20;
-            endX -= 20;
+            startX -= (int)(SettingsManager.getInstance().getMovingSpeed() * deltaTime);
+            endX -= (int)(SettingsManager.getInstance().getMovingSpeed() * deltaTime);
         }
     }
 

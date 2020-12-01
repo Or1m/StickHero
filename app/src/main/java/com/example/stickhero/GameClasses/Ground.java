@@ -18,9 +18,9 @@ public class Ground implements Drawable {
         reset();
     }
 
-    public void update() {
+    public void update(int deltaTime) {
         if(Player.getInstance().isInFinish())
-            left -= 20;
+            left -= (int)(SettingsManager.getInstance().getMovingSpeed() * deltaTime);
     }
 
     @Override

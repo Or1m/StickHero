@@ -5,10 +5,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 
 import com.example.stickhero.Behaviour.Drawable;
 import com.example.stickhero.R;
 import com.example.stickhero.SettingsManager;
+
+import java.util.Set;
 
 public class Background implements Drawable {
 
@@ -30,9 +33,10 @@ public class Background implements Drawable {
         canvas.drawBitmap(this.background, this.x, this.y, paint);
     }
 
-    public void update() {
-        if (Player.getInstance().isWalking())
-            this.moveX(-10);
+    public void update(int deltaTime) {
+        if (Player.getInstance().isWalking()) {
+            this.moveX(-24);
+        }
 
         if (this.isNotVisible())
             this.setX(SettingsManager.getInstance().getScreenX());

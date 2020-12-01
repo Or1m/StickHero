@@ -30,14 +30,14 @@ public class Stick implements Drawable {
     }
 
 
-    public void update() {
+    public void update(int deltaTime) {
         if(Player.getInstance().isInFinish()) {
-            this.start.x -= 20;
-            this.end.x -= 20;
+            this.start.x -= (int)(SettingsManager.getInstance().getMovingSpeed() * deltaTime);
+            this.end.x -= (int)(SettingsManager.getInstance().getMovingSpeed() * deltaTime);
         }
 
         if(this.isGrowing)
-            this.moveEndY(-25);
+            this.moveEndY(-(int)((SettingsManager.getInstance().getMovingSpeed() + 0.1) * deltaTime));
 
         int groundTop = Player.getInstance().getPlayerBottom();
         if(this.end.y > groundTop) {
@@ -49,7 +49,7 @@ public class Stick implements Drawable {
 
         if(this.isFalling()) {
             this.rotate(alpha);
-            alpha += SettingsManager.getInstance().getGravity();
+            alpha += SettingsManager.getInstance().getGravity() * ((double)deltaTime / 30);
         }
     }
 
