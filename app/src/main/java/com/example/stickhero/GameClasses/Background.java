@@ -3,6 +3,8 @@ package com.example.stickhero.GameClasses;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 
 import com.example.stickhero.R;
 
@@ -46,5 +48,17 @@ public class Background {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public void draw(Canvas canvas, Paint paint) {
+        canvas.drawBitmap(this.background, this.x, this.y, paint);
+    }
+
+    public void update(Player player, int screenX) {
+        if (player.isWalking())
+            this.moveX(-10);
+
+        if (this.isNotVisible())
+            this.setX(screenX);
     }
 }

@@ -1,5 +1,9 @@
 package com.example.stickhero.GameClasses;
 
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
+
 public class DestinationGround {
 
     int startX, endX;
@@ -21,5 +25,10 @@ public class DestinationGround {
 
     public int getEndX() {
         return endX;
+    }
+
+    public void draw(Canvas canvas, Paint paint, int groundTop, int screenY) {
+        Rect finish = new Rect(this.startX, groundTop, this.endX, screenY);
+        canvas.drawRect(finish, paint);
     }
 }

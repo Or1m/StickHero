@@ -2,8 +2,12 @@ package com.example.stickhero.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.res.Resources;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.Display;
 
 import com.example.stickhero.GameView;
 
@@ -15,10 +19,8 @@ public class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Point point = new Point();
-        //TODO najst nieco co neni deprecated
-        getWindowManager().getDefaultDisplay().getSize(point);
-        gameView = new GameView(this, point.x, point.y);
+        DisplayMetrics dm = Resources.getSystem().getDisplayMetrics();
+        gameView = new GameView(this, dm.widthPixels, dm.heightPixels);
 
         setContentView(gameView);
     }

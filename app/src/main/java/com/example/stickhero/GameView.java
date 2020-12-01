@@ -24,15 +24,15 @@ public class GameView extends SurfaceView implements Runnable {
     private final int screenX, screenY;
 
     private Paint paint;
+    private Canvas canvas;
+
     private Thread thread;
     private boolean isRunning;
 
-    private Background[] background;
+    private Background[] backgrounds;
     private Player player;
     private Stick stick;
     private DestinationGround dest;
-
-    private double alpha = 0;
 
 
     public GameView(Context context, int screenX, int screenY) {
@@ -49,12 +49,12 @@ public class GameView extends SurfaceView implements Runnable {
         this.stick = new Stick(new Point(groundWidth, groundTop), new Point(groundWidth, groundTop), 10);
         this.dest = new DestinationGround(700, 1000); //TODO bude sa generovat za chodu
 
-        this.background = new Background[] {
+        this.backgrounds = new Background[] {
                 new Background(this.screenX, this.screenY, getResources()),
                 new Background(this.screenX, this.screenY, getResources())
         };
 
-        this.background[1].setX(this.screenX);
+        this.backgrounds[1].setX(this.screenX);
     }
 
 
@@ -68,67 +68,35 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void update() {
-        Point stickEnd = stick.getEnd();
+        for (Background b : this.backgrounds)
+            b.update(player, screenX);
 
-        //TODO cyklus
-        if(player.isWalking()) {
-            background[0].moveX(-10);
-            background[1].moveX(-10);
-        }
-
-        if(background[0].isNotVisible())
-            background[0].setX(screenX);
-
-        if(background[1].isNotVisible())
-            background[1].setX(screenX);
-
-        if(stick.isGrowing())
-            stick.moveEndY(-20);
-
-        if(stickEnd.y > groundTop) {
-            stick.setEndY(groundTop);
-
-            stick.setFalling(false);
-            stick.setLyingDown(true);
-        }
-
-        if(stick.isFalling()) {
-            stick.rotate(alpha);
-            alpha += gravity;
-        }
-
-        if(stick.isLyingDown() && dest.isInBounds(stickEnd.x) && player.getX() < stickEnd.x) {
-            player.setWalking(true);
-            player.moveX(10);
-        }
-
-        if(player.getX() >= stickEnd.x)
-            player.setWalking(false);
+        stick.update(groundTop, gravity);
+        player.update(stick, dest);
     }
-
-
 
     private void draw() {
         Point stickEnd = stick.getEnd();
 
         if(getHolder().getSurface().isValid()) {
-            Canvas canvas = getHolder().lockCanvas();
+            canvas = getHolder().lockCanvas();
 
-            //TODO cyklus
-            canvas.drawBitmap(background[0].getBackground(), background[0].getX(), background[0].getY(), paint);
-            canvas.drawBitmap(background[1].getBackground(), background[1].getX(), background[1].getY(), paint);
+            for(Background b : backgrounds) {
+                b.draw(canvas, this.paint);
+            }
 
             //TODO lepsie vymysliet rectangle asi posielat canvas a metodu draw v triedach
+            //TODO interface na draw a update, zjednotit parametre, mozno singleton na top a y aby sa dali volat v cykle
+            //TODO Predok Ground
             Rect rect = new Rect(0, groundTop, groundWidth, screenY);
             canvas.drawRect(rect, paint);
 
-            Rect finish = new Rect(dest.getStartX(), groundTop, dest.getEndX(), screenY);
-            canvas.drawRect(finish, paint);
+            dest.draw(canvas, paint, groundTop, screenY);
 
-            paint.setStrokeWidth(stick.getWidth());
-            canvas.drawLine(stick.getStart().x, groundTop, stickEnd.x, stickEnd.y, paint);
+            stick.draw(canvas, paint, groundTop);
 
-            canvas.drawBitmap(player.getPlayer(), player.getX(), player.getY(), paint);
+            player.draw(canvas, paint);
+
 
             getHolder().unlockCanvasAndPost(canvas);
         }
@@ -164,7 +132,7 @@ public class GameView extends SurfaceView implements Runnable {
         return true;
     }
 
-
+    //region Service Methods
     public void onResume() {
         isRunning = true;
         thread = new Thread(this);
@@ -179,4 +147,5 @@ public class GameView extends SurfaceView implements Runnable {
             e.printStackTrace();
         }
     }
+    //endregion
 }

@@ -1,5 +1,7 @@
 package com.example.stickhero.GameClasses;
 
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Point;
 
 import com.example.stickhero.Utils;
@@ -10,6 +12,8 @@ public class Stick {
     private Point end;
 
     private int width;
+
+    private double alpha = 0;
 
     private boolean isGrowing;
     private boolean isFalling;
@@ -22,6 +26,29 @@ public class Stick {
 
         this.start.x -= width / 2;
         this.end.x -= width / 2;
+    }
+
+
+    public void update(int groundTop, double gravity) {
+        if(this.isGrowing)
+            this.moveEndY(-20);
+
+        if(this.end.y > groundTop) {
+            this.end.y = groundTop;
+
+            this.isFalling = false;
+            this.isLyingDown = true;
+        }
+
+        if(this.isFalling()) {
+            this.rotate(alpha);
+            alpha += gravity;
+        }
+    }
+
+    public void draw(Canvas canvas, Paint paint, int groundTop) {
+        paint.setStrokeWidth(this.width);
+        canvas.drawLine(this.start.x, groundTop, this.end.x, this.end.y, paint);
     }
 
 

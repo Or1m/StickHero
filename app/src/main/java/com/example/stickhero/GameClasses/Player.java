@@ -3,6 +3,9 @@ package com.example.stickhero.GameClasses;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Point;
 
 import com.example.stickhero.R;
 
@@ -25,6 +28,24 @@ public class Player {
         y = (int) (screenY / 1.7);
         x = 32;
     }
+
+
+    public void update(Stick stick, DestinationGround dest) {
+        Point stickEnd = stick.getEnd();
+
+        if(stick.isLyingDown() && dest.isInBounds(stickEnd.x) && this.x < stickEnd.x) {
+            this.setWalking(true);
+            this.moveX(10);
+        }
+
+        if(this.x >= stickEnd.x)
+            this.setWalking(false);
+    }
+
+    public void draw(Canvas canvas, Paint paint) {
+        canvas.drawBitmap(this.mainSprite, this.x, this.y, paint);
+    }
+
 
     //region Getters & Setters
     public Bitmap getPlayer() {
