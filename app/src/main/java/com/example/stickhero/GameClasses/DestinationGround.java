@@ -7,13 +7,21 @@ import android.graphics.Rect;
 import com.example.stickhero.Behaviour.Drawable;
 import com.example.stickhero.SettingsManager;
 
+import java.util.Set;
+
 public class DestinationGround implements Drawable {
 
     int startX, endX;
 
-    public DestinationGround(int startX, int endX) {
-        this.startX = startX;
-        this.endX = endX;
+    public DestinationGround() {
+        reset();
+    }
+
+    public void update() {
+        if(Player.getInstance().isInFinish()) {
+            startX -= 20;
+            endX -= 20;
+        }
     }
 
     @Override
@@ -33,5 +41,18 @@ public class DestinationGround implements Drawable {
 
     public int getEndX() {
         return endX;
+    }
+
+    public void reset() {
+        int widthMin = SettingsManager.getInstance().getDestMinWidth();
+        int widthMax = SettingsManager.getInstance().getDestMaxWidth();
+
+        int width = (int)(Math.random() * (widthMax - widthMin + 1) + widthMin);
+
+        int min = SettingsManager.getInstance().getDestMin();
+        int max = SettingsManager.getInstance().getScreenX() - width;
+
+        this.startX = (int)(Math.random() * (max - min + 1) + min);
+        this.endX = startX + 200;
     }
 }

@@ -40,11 +40,13 @@ public class GameView extends SurfaceView implements Runnable {
 
         this.paint = new Paint();
 
-        this.player = Player.getInstance(getResources());
-
-        this.stick = new Stick();
         this.ground = new Ground();
-        this.dest = new DestinationGround(700, 1000); //TODO bude sa generovat za chodu
+        this.player = Player.getInstance(ground, getResources());
+
+
+        this.stick = new Stick(this.ground);
+
+        this.dest = new DestinationGround();
 
 
         this.backgrounds = new Background[] { new Background(getResources()), new Background(getResources()) };
@@ -68,6 +70,9 @@ public class GameView extends SurfaceView implements Runnable {
             b.update();
 
         stick.update();
+        ground.update();
+        dest.update();
+
         player.update(stick, dest);
     }
 

@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.util.Log;
 
 import com.example.stickhero.Behaviour.Drawable;
 import com.example.stickhero.R;
@@ -16,26 +17,33 @@ public class Player implements Drawable {
     Bitmap mainSprite;
     Bitmap[] runAnimation;
 
-    private int x, y, width, height;
+    private int x, y, baseY, width, height, groundDistance, offset = 32;
     private boolean isWalking;
+    private boolean isInFinish;
+
+    private int stopPosition;
+    boolean backOnStart = false;
+    boolean isGoingToFall = false;
+
+    private Ground ground;
 
     private static Player instance = null;
 
-    public static Player getInstance(Resources res)  {
+    public static Player getInstance(Ground ground, Resources res)  {
         if (instance == null)
-            instance = new Player(res);
+            instance = new Player(ground, res);
 
         return instance;
     }
 
     public static Player getInstance()  {
         if (instance == null)
-            instance = new Player(null);
+            instance = new Player(null,null);
 
         return instance;
     }
 
-    private Player(Resources res) {
+    private Player(Ground ground, Resources res) {
         mainSprite = BitmapFactory.decodeResource(res, R.drawable.idle);
 
         width = mainSprite.getWidth() / 5;
@@ -44,20 +52,65 @@ public class Player implements Drawable {
         mainSprite = Bitmap.createScaledBitmap(mainSprite, width, height, false);
 
         y = (int) (SettingsManager.getInstance().getScreenY() / 1.7);
-        x = 32;
+        baseY = y;
+        x = offset;
+
+        this.ground = ground;
+        groundDistance = this.ground.getRight() - offset;
+
+        stopPosition = SettingsManager.getInstance().getScreenX();
     }
 
 
     public void update(Stick stick, DestinationGround dest) {
         Point stickEnd = stick.getEnd();
 
-        if(stick.isLyingDown() && dest.isInBounds(stickEnd.x) && this.x < stickEnd.x) {
-            this.setWalking(true);
-            this.moveX(10);
+        if(!backOnStart) {
+            stopPosition = dest.getEndX() - groundDistance;
+            backOnStart = true;
         }
 
-        if(this.x >= stickEnd.x)
+        if(isInFinish && this.x > offset) {
+            this.moveX(-20);
+            return;
+        }
+
+        if(isInFinish) {
+            this.x = offset;
+            this.isInFinish = false;
+            this.backOnStart = false;
+
+            dest.reset();
+            ground.reset();
+
+            stick.reset();
+        }
+
+        if(stick.isLyingDown() && !dest.isInBounds(stickEnd.x) && (this.x + width / 3) < stick.getEnd().x) {
+            this.setWalking(true);
+            this.moveX(15);
+            isGoingToFall = true;
+            return;
+        }
+
+        if(isGoingToFall) {
+            this.y += 20;
+
+            if(isWalking)
+                this.isWalking = false;
+
+            return;
+        }
+
+        if(stick.isLyingDown() && dest.isInBounds(stickEnd.x) && this.x < stopPosition) {
+            this.setWalking(true);
+            this.moveX(15);
+        }
+
+        if(this.x >= stopPosition && !isInFinish) {
             this.setWalking(false);
+            this.isInFinish = true;
+        }
     }
 
     @Override
@@ -72,7 +125,7 @@ public class Player implements Drawable {
     }
 
     public int getPlayerBottom() {
-        return this.y + this.height - 30;
+        return this.baseY + this.height - 30;
     }
 
     //TODO opakujuce sa moveX
@@ -120,5 +173,10 @@ public class Player implements Drawable {
     public void setHeight(int height) {
         this.height = height;
     }
+
+    public boolean isInFinish() {
+        return isInFinish;
+    }
+
     //endregion
 }

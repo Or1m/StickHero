@@ -21,18 +21,23 @@ public class Stick implements Drawable {
     private boolean isFalling;
     private boolean isLyingDown;
 
-    public Stick() {
-        this.start = new Point(SettingsManager.getInstance().getGroundWidth(), Player.getInstance().getPlayerBottom());
-        this.end = new Point(this.start);
+    private Ground ground;
 
-        this.start.x -= width / 2;
-        this.end.x -= width / 2;
+    public Stick(Ground ground) {
+        this.ground = ground;
+
+        reset();
     }
 
 
     public void update() {
+        if(Player.getInstance().isInFinish()) {
+            this.start.x -= 20;
+            this.end.x -= 20;
+        }
+
         if(this.isGrowing)
-            this.moveEndY(-20);
+            this.moveEndY(-25);
 
         int groundTop = Player.getInstance().getPlayerBottom();
         if(this.end.y > groundTop) {
@@ -104,6 +109,17 @@ public class Stick implements Drawable {
 
     public void setLyingDown(boolean lyingDown) {
         isLyingDown = lyingDown;
+    }
+
+    public void reset() {
+        isFalling = isGrowing = isLyingDown = false;
+        alpha = 0;
+
+        this.start = new Point(ground.getRight(), Player.getInstance().getPlayerBottom());
+        this.end = new Point(this.start);
+
+        this.start.x -= width / 2;
+        this.end.x -= width / 2;
     }
     //endregion
 }
