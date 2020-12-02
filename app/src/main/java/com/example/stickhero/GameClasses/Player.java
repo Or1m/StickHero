@@ -4,15 +4,17 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.Log;
 
+import com.example.stickhero.Behaviour.Collidable;
 import com.example.stickhero.Behaviour.Drawable;
 import com.example.stickhero.R;
 import com.example.stickhero.SettingsManager;
 
-public class Player implements Drawable {
+public class Player implements Drawable, Collidable {
 
     Bitmap mainSprite;
     Bitmap[] runAnimation;
@@ -32,6 +34,8 @@ public class Player implements Drawable {
 
 
     private boolean scored;
+    private boolean chocolated;
+    private boolean flipped;
 
     public static Player getInstance(Ground ground, Resources res)  {
         if (instance == null)
@@ -100,8 +104,12 @@ public class Player implements Drawable {
         if(isGoingToFall) {
             this.y += 20;
 
-            if(isWalking)
+
+            if(isWalking) {
                 this.isWalking = false;
+                flip();
+            }
+
 
             return;
         }
@@ -190,5 +198,22 @@ public class Player implements Drawable {
     public void setScored(boolean scored) {
         this.scored = scored;
     }
+
+    public void setChocolated(boolean chocolated) {
+        this.chocolated = chocolated;
+    }
+
+    public boolean isChocolated() {
+        return chocolated;
+    }
+
+    public void flip() {
+        Matrix matrix = new Matrix();
+        matrix.postScale( 1, -1 , width / 2f, height / 2f);
+        mainSprite = Bitmap.createBitmap(mainSprite, 0, 0, width, height, matrix, true);
+        flipped = !flipped;
+        this.y = flipped ? getPlayerBottom() - 30 : (int) (SettingsManager.getInstance().getScreenY() / 1.7);
+    }
+
     //endregion
 }

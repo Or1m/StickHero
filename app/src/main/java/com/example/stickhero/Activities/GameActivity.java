@@ -1,26 +1,22 @@
 package com.example.stickhero.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.res.Resources;
-import android.graphics.Point;
-import android.graphics.Rect;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.view.Display;
 
 import com.example.stickhero.GameView;
+import com.example.stickhero.R;
 
-public class GameActivity extends AppCompatActivity {
+public class GameActivity extends BaseActivity {
 
     private GameView gameView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_game);
 
-        gameView = new GameView(this);
-        setContentView(gameView);
+        gameView = findViewById(R.id.gameView);
+        gameView.setActivity(this);
+        gameView.setMuted(muted);
     }
 
     @Override

@@ -17,7 +17,7 @@ public class BaseActivity extends AppCompatActivity {
     private boolean touchStayedWithinViewBounds;
     MediaPlayer mediaPlayer;
 
-    static Boolean muted = false;
+    public static Boolean muted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
