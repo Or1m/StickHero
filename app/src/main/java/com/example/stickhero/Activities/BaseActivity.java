@@ -2,6 +2,8 @@ package com.example.stickhero.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
@@ -19,12 +21,21 @@ public class BaseActivity extends AppCompatActivity {
 
     public static Boolean muted = false;
 
+    public static final String MyPREFERENCES = "MyPrefs" ;
+    public static final String score = "score";
+    public static final String chocolates = "chocolates";
+    public static final String isMuted = "muted";
+
+    SharedPreferences sharedpreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
 
         mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.click);
+
+        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
     }
 
     protected boolean processEvent(View view, MotionEvent motionEvent, ImageView img) {

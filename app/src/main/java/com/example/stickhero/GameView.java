@@ -55,8 +55,6 @@ public class GameView extends SurfaceView implements Runnable {
 
     private boolean muted;
 
-    MediaPlayer mp;
-
     Drawable[] drawables;
 
     public GameView(Context context) {
@@ -130,8 +128,8 @@ public class GameView extends SurfaceView implements Runnable {
 
             if(player.isScored()) {
                 score++;
-                mp = MediaPlayer.create(getContext(), R.raw.dest);
-                mp.start();
+                if(!muted)
+                    MediaPlayer.create(getContext(), R.raw.dest).start();
                 player.setScored(false);
 
                 activity.runOnUiThread(updateScoreRunnable);
@@ -139,8 +137,8 @@ public class GameView extends SurfaceView implements Runnable {
 
             if(player.touch(chocolate) && !player.isChocolated()) {
                 chocolates++;
-                mp = MediaPlayer.create(getContext(), R.raw.pick);
-                mp.start();
+                if(!muted)
+                    MediaPlayer.create(getContext(), R.raw.pick).start();
                 player.setChocolated(true);
                 chocolate.remove();
                 activity.runOnUiThread(updateChocolateRunnable);

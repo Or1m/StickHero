@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.example.stickhero.R;
 
@@ -20,7 +21,7 @@ public class MainActivity extends BaseActivity {
     ImageButton settings;
     ImageButton shop;
 
-
+    TextView counter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +33,12 @@ public class MainActivity extends BaseActivity {
         sound = findViewById(R.id.sound);
         settings = findViewById(R.id.settings);
         shop = findViewById(R.id.shop);
+        counter = findViewById(R.id.counter);
+
+        muted = sharedpreferences.getBoolean(isMuted, false);
+        counter.setText(String.valueOf(sharedpreferences.getInt(chocolates, 0)));
+        if(muted)
+            sound.setColorFilter(Color.argb(100, 0, 0, 0), PorterDuff.Mode.SRC_ATOP);
 
         setUpListeners();
     }
@@ -139,5 +146,11 @@ public class MainActivity extends BaseActivity {
 
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        counter.setText(String.valueOf(sharedpreferences.getInt(chocolates, 0)));
     }
 }
