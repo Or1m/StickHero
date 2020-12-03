@@ -11,7 +11,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.stickhero.Fragments.MySettingsFragment;
 import com.example.stickhero.R;
 
 public class MainActivity extends BaseActivity {
@@ -20,6 +22,7 @@ public class MainActivity extends BaseActivity {
     ImageButton sound;
     ImageButton settings;
     ImageButton shop;
+    ImageButton reset;
 
     TextView counter;
 
@@ -34,6 +37,7 @@ public class MainActivity extends BaseActivity {
         settings = findViewById(R.id.settings);
         shop = findViewById(R.id.shop);
         counter = findViewById(R.id.counter);
+        reset = findViewById(R.id.resetButton);
 
         muted = sharedpreferences.getBoolean(isMuted, false);
         counter.setText(String.valueOf(sharedpreferences.getInt(chocolates, 0)));
@@ -105,6 +109,9 @@ public class MainActivity extends BaseActivity {
                     settings.invalidate();
                     if(!muted)
                         mediaPlayer.start();
+
+                    MySettingsFragment fragment = new MySettingsFragment();
+                    fragment.show(getSupportFragmentManager(), "MyFragment");
                 }
                 return true;
             }
@@ -121,7 +128,7 @@ public class MainActivity extends BaseActivity {
                 return true;
             }
         });
-    }
+}
 
     @Override
     public void onBackPressed()
@@ -152,5 +159,9 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         counter.setText(String.valueOf(sharedpreferences.getInt(chocolates, 0)));
+    }
+
+    public void setUpReset(View view) {
+        Toast.makeText(getApplicationContext(), "Sada", Toast.LENGTH_SHORT).show();
     }
 }
