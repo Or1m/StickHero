@@ -31,11 +31,12 @@ public class Player implements Drawable, Collidable {
 
     private static Player instance = null;
 
-
-
     private boolean scored;
     private boolean chocolated;
     private boolean flipped;
+    private boolean dead;
+
+    private Stick stick;
 
     public static Player getInstance(Ground ground, Resources res)  {
         if (instance == null)
@@ -59,9 +60,7 @@ public class Player implements Drawable, Collidable {
 
         mainSprite = Bitmap.createScaledBitmap(mainSprite, width, height, false);
 
-        y = (int) (SettingsManager.getInstance().getScreenY() / 1.7);
-        baseY = y;
-        x = offset;
+        reset();
 
         this.ground = ground;
         groundDistance = this.ground.getRight() - offset;
@@ -69,8 +68,21 @@ public class Player implements Drawable, Collidable {
         stopPosition = SettingsManager.getInstance().getScreenX();
     }
 
+    public void reset() {
+        dead = isWalking = isInFinish = isGoingToFall = chocolated = scored = flipped = false;
+        flip();
 
-    public void update(Stick stick, DestinationGround dest, Background[] backgrounds, int deltaTime) {
+        if(stick != null)
+            stick.reset();
+
+        y = (int) (SettingsManager.getInstance().getScreenY() / 1.7);
+        baseY = y;
+        x = offset;
+    }
+
+
+    public void update(int deltaTime, Stick stick, DestinationGround dest) {
+        this.stick = stick;
         Point stickEnd = stick.getEnd();
 
         if(!backOnStart) {
@@ -101,15 +113,17 @@ public class Player implements Drawable, Collidable {
             return;
         }
 
+        if(this.y >= SettingsManager.getInstance().getScreenY())
+            this.dead = true;
+
         if(isGoingToFall) {
             this.y += 20;
-
+            Log.d("TAG", String.valueOf(this.y));
 
             if(isWalking) {
                 this.isWalking = false;
                 flip();
             }
-
 
             return;
         }
@@ -171,22 +185,6 @@ public class Player implements Drawable, Collidable {
         isWalking = walking;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
     public boolean isInFinish() {
         return isInFinish;
     }
@@ -213,6 +211,10 @@ public class Player implements Drawable, Collidable {
         mainSprite = Bitmap.createBitmap(mainSprite, 0, 0, width, height, matrix, true);
         flipped = !flipped;
         this.y = flipped ? getPlayerBottom() - 30 : (int) (SettingsManager.getInstance().getScreenY() / 1.7);
+    }
+
+    public boolean isDead() {
+        return dead;
     }
 
     //endregion

@@ -8,8 +8,6 @@ import android.widget.TextView;
 import com.example.stickhero.GameView;
 import com.example.stickhero.R;
 
-import java.util.Objects;
-
 public class GameActivity extends BaseActivity {
 
     private GameView gameView;
@@ -53,5 +51,9 @@ public class GameActivity extends BaseActivity {
 
         editor.putBoolean(isMuted, muted);
         editor.apply();
+    }
+
+    public GameView getGameView() {
+        return gameView;
     }
 }

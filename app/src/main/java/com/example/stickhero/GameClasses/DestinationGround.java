@@ -17,7 +17,7 @@ public class DestinationGround implements Drawable {
         reset();
     }
 
-    public void update(int deltaTime) {
+    public void update(int deltaTime, Stick stick, DestinationGround dest) {
         if(Player.getInstance().isInFinish()) {
             startX -= (int)(SettingsManager.getInstance().getMovingSpeed() * deltaTime);
             endX -= (int)(SettingsManager.getInstance().getMovingSpeed() * deltaTime);

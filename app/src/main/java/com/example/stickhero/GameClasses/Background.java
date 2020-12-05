@@ -33,7 +33,7 @@ public class Background implements Drawable {
         canvas.drawBitmap(this.background, this.x, this.y, paint);
     }
 
-    public void update(int deltaTime) {
+    public void update(int deltaTime, Stick stick, DestinationGround dest) {
         if (Player.getInstance().isWalking()) {
             this.moveX(-24);
         }

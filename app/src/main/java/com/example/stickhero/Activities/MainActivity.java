@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.stickhero.Alerts;
 import com.example.stickhero.Fragments.MySettingsFragment;
 import com.example.stickhero.R;
 
@@ -136,25 +137,8 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Exit Stick Hero");
-        builder.setMessage("Are you sure you wanna to quit this masterpiece?");
+        AlertDialog alert = Alerts.CreateMainMenuAlert( this);
 
-        builder.setPositiveButton("Yes, just quit it fast", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                finish();
-            }
-        });
-
-        builder.setNegativeButton("No, sorry my mistake", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        AlertDialog alert = builder.create();
         alert.show();
     }
 

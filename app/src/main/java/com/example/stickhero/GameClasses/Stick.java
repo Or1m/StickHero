@@ -30,7 +30,7 @@ public class Stick implements Drawable {
     }
 
 
-    public void update(int deltaTime) {
+    public void update(int deltaTime, Stick stick, DestinationGround dest) {
         if(Player.getInstance().isInFinish()) {
             this.start.x -= (int)(SettingsManager.getInstance().getMovingSpeed() * deltaTime);
             this.end.x -= (int)(SettingsManager.getInstance().getMovingSpeed() * deltaTime);

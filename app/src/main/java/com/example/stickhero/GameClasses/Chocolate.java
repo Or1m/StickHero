@@ -31,6 +31,11 @@ public class Chocolate implements Drawable, Collidable {
     }
 
     @Override
+    public void update(int deltaTime, Stick stick, DestinationGround dest) {
+
+    }
+
+    @Override
     public void draw(Canvas canvas, Paint paint) {
         canvas.drawBitmap(chocoSprite, this.x, this.y, paint);
     }
