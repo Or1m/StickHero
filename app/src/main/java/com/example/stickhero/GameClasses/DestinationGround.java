@@ -53,6 +53,6 @@ public class DestinationGround implements Drawable {
         int max = SettingsManager.getInstance().getScreenX() - width;
 
         this.startX = (int)(Math.random() * (max - min + 1) + min);
-        this.endX = startX + 200;
+        this.endX = startX + width;
     }
 }

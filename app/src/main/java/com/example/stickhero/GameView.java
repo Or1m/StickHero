@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.media.MediaPlayer;
@@ -17,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
+import com.example.stickhero.Behaviour.Collidable;
 import com.example.stickhero.Behaviour.Drawable;
 import com.example.stickhero.GameClasses.Background;
 import com.example.stickhero.GameClasses.Chocolate;
@@ -30,23 +30,14 @@ public class GameView extends SurfaceView implements Runnable {
 
     //region Private Variables
     private Paint paint;
-
-    private Thread thread;
-    private boolean isRunning;
-
-    private Background[] backgrounds;
-    private Player player;
-    private Stick stick;
-    private Ground ground;
-    private DestinationGround dest;
-    private Chocolate chocolate;
-
     private Activity activity;
+    private Thread thread;
+
+    private boolean isRunning;
+    private boolean muted;
 
     private int score;
     private int chocolates;
-
-    private boolean muted;
 
     Drawable[] drawables;
     //endregion
@@ -71,16 +62,16 @@ public class GameView extends SurfaceView implements Runnable {
     private void init(Context context) {
         this.paint = new Paint();
 
-        this.ground = new Ground();
-        this.player = Player.getInstance(ground, getResources());
-        this.stick = new Stick(this.ground);
-        this.dest = new DestinationGround();
-        this.chocolate = new Chocolate(getResources(), dest.getStartX(), ground.getRight());
+        drawables = new Drawable[7];
+        drawables[0] = new Background(getResources());
+        drawables[1] = new Background(getResources());
+        drawables[2] = new Ground();
+        drawables[3] = Player.getInstance((Ground) drawables[2], getResources());
+        drawables[4] = new DestinationGround();
+        drawables[5] = new Chocolate(getResources(), ((DestinationGround)drawables[4]).getStartX(), ((Ground) drawables[2]).getRight());
+        drawables[6] = new Stick((Ground) drawables[2]);
 
-        this.backgrounds = new Background[] { new Background(getResources()), new Background(getResources()) };
-        this.backgrounds[1].setX(SettingsManager.getInstance().getScreenX());
-
-        drawables = new Drawable[]{ backgrounds[0], backgrounds[1], stick, ground, dest, chocolate, player };
+        ((Background) drawables[1]).setX(SettingsManager.getInstance().getScreenX());
     }
     //endregion
 
@@ -128,20 +119,20 @@ public class GameView extends SurfaceView implements Runnable {
             draw();
             sleep();
 
-            if(player.isScored())
+            if(Player.getInstance().isScored())
                 handleScore();
 
-            if(player.isDead())
+            if(Player.getInstance().isDead())
                 handleDead();
 
-            if(player.touch(chocolate) && !player.isChocolated())
+            if(Player.getInstance().touch((Collidable) drawables[5]) && !Player.getInstance().isChocolated())
                 handleChocos();
         }
     }
 
     private void update(int deltaTime) {
         for(Drawable d : drawables)
-            d.update(deltaTime, stick, dest);
+            d.update(deltaTime, (Stick) drawables[6], (DestinationGround) drawables[4]);
     }
 
     private void draw() {
@@ -171,7 +162,7 @@ public class GameView extends SurfaceView implements Runnable {
         if(!muted)
             MediaPlayer.create(getContext(), R.raw.dest).start();
 
-        player.setScored(false);
+        Player.getInstance().setScored(false);
 
         activity.runOnUiThread(updateScoreRunnable);
     }
@@ -182,8 +173,8 @@ public class GameView extends SurfaceView implements Runnable {
         if(!muted)
             MediaPlayer.create(getContext(), R.raw.pick).start();
 
-        player.setChocolated(true);
-        chocolate.remove();
+        Player.getInstance().setChocolated(true);
+        ((Chocolate) drawables[5]).remove();
         activity.runOnUiThread(updateChocolateRunnable);
     }
 
@@ -201,18 +192,18 @@ public class GameView extends SurfaceView implements Runnable {
                 case MotionEvent.ACTION_DOWN:
                     Toast.makeText(getContext(), "Down", Toast.LENGTH_SHORT).show();
 
-                    if(!player.isWalking())
-                        stick.setGrowing(true);
+                    if(!Player.getInstance().isWalking())
+                        ((Stick) drawables[6]).setGrowing(true);
                     else
-                        player.flip();
+                        Player.getInstance().flip();
                     return true;
 
                 case MotionEvent.ACTION_UP:
                     Toast.makeText(getContext(), "Up", Toast.LENGTH_SHORT).show();
 
-                    if(!player.isWalking()) {
-                        stick.setGrowing(false);
-                        stick.setFalling(true);
+                    if(!Player.getInstance().isWalking()) {
+                        ((Stick) drawables[6]).setGrowing(false);
+                        ((Stick) drawables[6]).setFalling(true);
                     }
 
                     return true;
@@ -226,7 +217,7 @@ public class GameView extends SurfaceView implements Runnable {
     //region Service Methods
     public void onResume() {
         isRunning = true;
-        player.reset();
+        Player.getInstance().reset();
 
         thread = new Thread(this);
         thread.start();

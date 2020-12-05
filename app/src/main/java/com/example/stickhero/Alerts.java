@@ -2,7 +2,6 @@ package com.example.stickhero;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 
 import com.example.stickhero.Activities.GameActivity;
