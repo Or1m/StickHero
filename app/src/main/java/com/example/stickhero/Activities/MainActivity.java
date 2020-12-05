@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -26,6 +27,8 @@ public class MainActivity extends BaseActivity {
 
     TextView counter;
 
+    MySettingsFragment fragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +44,7 @@ public class MainActivity extends BaseActivity {
 
         muted = sharedpreferences.getBoolean(isMuted, false);
         counter.setText(String.valueOf(sharedpreferences.getInt(chocolates, 0)));
+
         if(muted)
             sound.setColorFilter(Color.argb(100, 0, 0, 0), PorterDuff.Mode.SRC_ATOP);
 
@@ -110,7 +114,7 @@ public class MainActivity extends BaseActivity {
                     if(!muted)
                         mediaPlayer.start();
 
-                    MySettingsFragment fragment = new MySettingsFragment();
+                    fragment = new MySettingsFragment(sharedpreferences.getInt(score, 0));
                     fragment.show(getSupportFragmentManager(), "MyFragment");
                 }
                 return true;
@@ -131,8 +135,7 @@ public class MainActivity extends BaseActivity {
 }
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Exit Stick Hero");
         builder.setMessage("Are you sure you wanna to quit this masterpiece?");
@@ -162,6 +165,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public void setUpReset(View view) {
-        Toast.makeText(getApplicationContext(), "Sada", Toast.LENGTH_SHORT).show();
+        sharedpreferences.edit().remove(score).apply();
+        fragment.redrawScore(sharedpreferences.getInt(score, 0));
     }
 }
