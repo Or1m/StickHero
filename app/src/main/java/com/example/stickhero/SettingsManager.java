@@ -7,14 +7,17 @@ public class SettingsManager {
 
     private static SettingsManager instance = null;
 
-    private final double gravity = 0.2;
-    private final int screenX, screenY;
-
-    private final int destMin;
-    private final int destMinWidth = 30;
-    private final int destMaxWidth = 250;
-
+    //region Private Final Variables
+    private final double gravity     = 0.2;
     private final double movingSpeed = 0.7;
+
+    private final int groundWidth    = 200;
+    private final int bcgSpeed       = -24;
+    private final int destMinWidth   = 30;
+    private final int destMaxWidth   = 250;
+
+    private final int screenX, screenY, destMin;
+    //endregion
 
     private SettingsManager() {
         DisplayMetrics dm = Resources.getSystem().getDisplayMetrics();
@@ -31,6 +34,7 @@ public class SettingsManager {
         return instance;
     }
 
+    //region Getters
     public int getScreenX() {
         return screenX;
     }
@@ -58,4 +62,13 @@ public class SettingsManager {
     public double getMovingSpeed() {
         return movingSpeed;
     }
+
+    public int getGroundWidth() {
+        return groundWidth;
+    }
+
+    public int getBcgSpeed() {
+        return bcgSpeed;
+    }
+    //endregion
 }

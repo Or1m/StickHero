@@ -6,7 +6,7 @@ import android.graphics.Paint;
 import com.example.stickhero.GameClasses.DestinationGround;
 import com.example.stickhero.GameClasses.Stick;
 
-public interface Drawable {
+public interface IDrawable {
     void update(int deltaTime, Stick stick, DestinationGround dest);
     void draw(Canvas canvas, Paint paint);
 }

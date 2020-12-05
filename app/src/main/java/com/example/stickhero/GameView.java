@@ -12,12 +12,11 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
-import com.example.stickhero.Behaviour.Collidable;
-import com.example.stickhero.Behaviour.Drawable;
+import com.example.stickhero.Behaviour.ICollidable;
+import com.example.stickhero.Behaviour.IDrawable;
 import com.example.stickhero.GameClasses.Background;
 import com.example.stickhero.GameClasses.Chocolate;
 import com.example.stickhero.GameClasses.DestinationGround;
@@ -39,7 +38,7 @@ public class GameView extends SurfaceView implements Runnable {
     private int score;
     private int chocolates;
 
-    Drawable[] drawables;
+    IDrawable[] drawables;
     //endregion
 
     //region Constructors & Init
@@ -62,13 +61,13 @@ public class GameView extends SurfaceView implements Runnable {
     private void init(Context context) {
         this.paint = new Paint();
 
-        drawables = new Drawable[7];
+        drawables = new IDrawable[7];
         drawables[0] = new Background(getResources());
         drawables[1] = new Background(getResources());
         drawables[2] = new Ground();
         drawables[3] = Player.getInstance((Ground) drawables[2], getResources());
         drawables[4] = new DestinationGround();
-        drawables[5] = new Chocolate(getResources(), ((DestinationGround)drawables[4]).getStartX(), ((Ground) drawables[2]).getRight());
+        drawables[5] = new Chocolate(getResources(), ((DestinationGround)drawables[4]).getStartX());
         drawables[6] = new Stick((Ground) drawables[2]);
 
         ((Background) drawables[1]).setX(SettingsManager.getInstance().getScreenX());
@@ -125,13 +124,13 @@ public class GameView extends SurfaceView implements Runnable {
             if(Player.getInstance().isDead())
                 handleDead();
 
-            if(Player.getInstance().touch((Collidable) drawables[5]) && !Player.getInstance().isChocolated())
+            if(Player.getInstance().touch((ICollidable) drawables[5]) && !Player.getInstance().isChocolated())
                 handleChocos();
         }
     }
 
     private void update(int deltaTime) {
-        for(Drawable d : drawables)
+        for(IDrawable d : drawables)
             d.update(deltaTime, (Stick) drawables[6], (DestinationGround) drawables[4]);
     }
 
@@ -139,7 +138,7 @@ public class GameView extends SurfaceView implements Runnable {
         if(getHolder().getSurface().isValid()) {
             Canvas canvas = getHolder().lockCanvas();
 
-            for(Drawable d : drawables)
+            for(IDrawable d : drawables)
                 d.draw(canvas, paint);
 
             getHolder().unlockCanvasAndPost(canvas);
@@ -174,7 +173,6 @@ public class GameView extends SurfaceView implements Runnable {
             MediaPlayer.create(getContext(), R.raw.pick).start();
 
         Player.getInstance().setChocolated(true);
-        ((Chocolate) drawables[5]).remove();
         activity.runOnUiThread(updateChocolateRunnable);
     }
 
@@ -187,28 +185,26 @@ public class GameView extends SurfaceView implements Runnable {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        //if(!stick.isFalling() && !stick.isLyingDown()) {
             switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    Toast.makeText(getContext(), "Down", Toast.LENGTH_SHORT).show();
 
-                    if(!Player.getInstance().isWalking())
+                case MotionEvent.ACTION_DOWN:
+                    if(!Player.getInstance().isWalking() && !((Stick) drawables[6]).isFalling())
                         ((Stick) drawables[6]).setGrowing(true);
-                    else
+
+                    if(Player.getInstance().isWalking() && ((Stick) drawables[6]).isLyingDown())
                         Player.getInstance().flip();
-                    return true;
+
+                    break;
 
                 case MotionEvent.ACTION_UP:
-                    Toast.makeText(getContext(), "Up", Toast.LENGTH_SHORT).show();
 
-                    if(!Player.getInstance().isWalking()) {
+                    if(!Player.getInstance().isWalking() && !((Stick) drawables[6]).isFalling() && !((Stick) drawables[6]).isLyingDown()) {
                         ((Stick) drawables[6]).setGrowing(false);
                         ((Stick) drawables[6]).setFalling(true);
                     }
 
-                    return true;
+                    break;
             }
-        //}
 
         return true;
     }

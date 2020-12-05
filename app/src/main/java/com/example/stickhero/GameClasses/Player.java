@@ -9,12 +9,12 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.Log;
 
-import com.example.stickhero.Behaviour.Collidable;
-import com.example.stickhero.Behaviour.Drawable;
+import com.example.stickhero.Behaviour.ICollidable;
+import com.example.stickhero.Behaviour.IDrawable;
 import com.example.stickhero.R;
 import com.example.stickhero.SettingsManager;
 
-public class Player implements Drawable, Collidable {
+public class Player implements IDrawable, ICollidable {
 
     Bitmap mainSprite;
     Bitmap[] runAnimation;
@@ -63,14 +63,18 @@ public class Player implements Drawable, Collidable {
         reset();
 
         this.ground = ground;
-        groundDistance = this.ground.getRight() - offset;
+        groundDistance = this.ground.getEndX() - offset;
 
         stopPosition = SettingsManager.getInstance().getScreenX();
     }
 
     public void reset() {
-        dead = isWalking = isInFinish = isGoingToFall = chocolated = scored = flipped = false;
-        flip();
+        dead = isWalking = isInFinish = isGoingToFall = chocolated = scored = false;
+
+        if(flipped) {
+            flip();
+            flipped = false;
+        }
 
         if(stick != null)
             stick.reset();
@@ -97,12 +101,12 @@ public class Player implements Drawable, Collidable {
 
         if(isInFinish) {
             this.x = offset;
+            this.chocolated = false;
             this.isInFinish = false;
             this.backOnStart = false;
 
-            dest.reset();
             ground.reset();
-
+            dest.reset();
             stick.reset();
         }
 
@@ -203,6 +207,10 @@ public class Player implements Drawable, Collidable {
 
     public boolean isChocolated() {
         return chocolated;
+    }
+
+    public boolean isBackOnStart() {
+        return backOnStart;
     }
 
     public void flip() {

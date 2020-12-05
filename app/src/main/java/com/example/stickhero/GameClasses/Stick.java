@@ -4,17 +4,16 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 
-import com.example.stickhero.Behaviour.Drawable;
+import com.example.stickhero.Behaviour.IDrawable;
 import com.example.stickhero.SettingsManager;
 import com.example.stickhero.Utils;
 
-public class Stick implements Drawable {
+public class Stick implements IDrawable {
 
-    private Point start;
-    private Point end;
+    //region Private Variables
+    private Point start, end;
 
     private final int width = 10;
-
     private double alpha = 0;
 
     private boolean isGrowing;
@@ -22,6 +21,7 @@ public class Stick implements Drawable {
     private boolean isLyingDown;
 
     private Ground ground;
+    //endregion
 
     public Stick(Ground ground) {
         this.ground = ground;
@@ -29,11 +29,12 @@ public class Stick implements Drawable {
         reset();
     }
 
-
+    //region Overrides
+    @Override
     public void update(int deltaTime, Stick stick, DestinationGround dest) {
         if(Player.getInstance().isInFinish()) {
             this.start.x -= (int)(SettingsManager.getInstance().getMovingSpeed() * deltaTime);
-            this.end.x -= (int)(SettingsManager.getInstance().getMovingSpeed() * deltaTime);
+            this.end.x   -= (int)(SettingsManager.getInstance().getMovingSpeed() * deltaTime);
         }
 
         if(this.isGrowing)
@@ -43,7 +44,7 @@ public class Stick implements Drawable {
         if(this.end.y > groundTop) {
             this.end.y = groundTop;
 
-            this.isFalling = false;
+            this.isFalling   = false;
             this.isLyingDown = true;
         }
 
@@ -58,8 +59,9 @@ public class Stick implements Drawable {
         paint.setStrokeWidth(this.width);
         canvas.drawLine(this.start.x, Player.getInstance().getPlayerBottom(), this.end.x, this.end.y, paint);
     }
+    //endregion
 
-
+    //region Manipulating Methods
     public void moveEndY(int translation) {
         this.end.y += translation;
     }
@@ -68,17 +70,19 @@ public class Stick implements Drawable {
         this.end = Utils.rotateLineClockWise(start, end, alpha);
     }
 
+    public void reset() {
+        isFalling = isGrowing = isLyingDown = false;
+        alpha = 0;
+
+        this.start = new Point(ground.getEndX(), Player.getInstance().getPlayerBottom());
+        this.end   = new Point(this.start);
+
+        this.start.x -= width / 2;
+        this.end.x   -= width / 2;
+    }
+    //endregion
 
     //region Getters & Setters
-    public void setEndY(int newEndY) {
-        this.end.y = newEndY;
-    }
-
-    //generated Getters & Setters
-    public boolean isGrowing() {
-        return isGrowing;
-    }
-
     public boolean isFalling() {
         return isFalling;
     }
@@ -87,16 +91,8 @@ public class Stick implements Drawable {
         return isLyingDown;
     }
 
-    public Point getStart() {
-        return start;
-    }
-
     public Point getEnd() {
         return end;
-    }
-
-    public int getWidth() {
-        return width;
     }
 
     public void setGrowing(boolean growing) {
@@ -105,21 +101,6 @@ public class Stick implements Drawable {
 
     public void setFalling(boolean falling) {
         isFalling = falling;
-    }
-
-    public void setLyingDown(boolean lyingDown) {
-        isLyingDown = lyingDown;
-    }
-
-    public void reset() {
-        isFalling = isGrowing = isLyingDown = false;
-        alpha = 0;
-
-        this.start = new Point(ground.getRight(), Player.getInstance().getPlayerBottom());
-        this.end = new Point(this.start);
-
-        this.start.x -= width / 2;
-        this.end.x -= width / 2;
     }
     //endregion
 }
