@@ -113,6 +113,9 @@ public class MainActivity extends BaseActivity {
 
                 if(!muted)
                     mediaPlayer.start();
+
+                Intent shopIntent = new Intent(MainActivity.this, ShopActivity.class);
+                startActivity(shopIntent);
             }
 
             return true;

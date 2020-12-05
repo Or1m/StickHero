@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">StickHero</string>
+    <string name="github">https://github.com/Or1m</string>
+    <string name="subject">TAMZ II</string>
+    <string name="made_by">Made by \nMiroslav Kačeriak</string>
+    <string name="back">Back</string>
+    <string name="_0">0</string>
+    <string name="in_game_chocolate">InGameChocolate</string>
+    <string name="sound">sound</string>
+    <string name="play">play</string>
+    <string name="settings">settings</string>
+    <string name="shop">shop</string>
+    <string name="about">about</string>
+    <string name="chocolate">chocolate</string>
+    <string name="high_score">High Score:</string>
+    <string name="reset_progress">resetProgress</string>
+    <string name="reset_progress_label">Reset progress</string>
 </resources>

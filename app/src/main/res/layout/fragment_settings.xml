@@ -12,7 +12,7 @@
         android:layout_width="159dp"
         android:layout_height="90dp"
         android:layout_marginTop="52dp"
-        android:text="High Score:"
+        android:text="@string/high_score"
         android:textAlignment="center"
         android:textSize="30sp"
         android:textStyle="bold"
@@ -36,13 +36,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textHighScore"
         app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@drawable/reset_button" />
+        app:srcCompat="@drawable/reset_button"
+        android:contentDescription="@string/reset_progress" />
 
     <TextView
         android:id="@+id/textHigh"
         android:layout_width="322dp"
         android:layout_height="48dp"
-        android:text="0"
+        android:text="@string/_0"
         android:textAlignment="center"
         android:textSize="36sp"
         android:textStyle="bold"
@@ -56,7 +57,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="48dp"
-        android:text="Reset progress"
+        android:text="@string/reset_progress_label"
         android:textColor="#FF0000"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/resetButton"
