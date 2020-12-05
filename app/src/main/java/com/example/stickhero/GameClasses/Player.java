@@ -53,9 +53,11 @@ public class Player implements IDrawable, ICollidable {
 
         reset();
 
-        this.ground = ground;
-        this.groundDistance = this.ground.getEndX() - offset;
-        this.stopPosition = SettingsManager.getInstance().getScreenX();
+        if(ground != null) {
+            this.ground = ground;
+            this.groundDistance = this.ground.getEndX() - offset;
+            this.stopPosition = SettingsManager.getInstance().getScreenX();
+        }
     }
     //endregion
 
