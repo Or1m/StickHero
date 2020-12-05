@@ -16,27 +16,18 @@ import com.example.stickhero.SettingsManager;
 
 public class Player implements IDrawable, ICollidable {
 
-    Bitmap mainSprite;
-    Bitmap[] runAnimation;
+    //region Private Variables
+    private Bitmap mainSprite;
 
-    private int x, y, baseY, width, height, groundDistance, offset = 32;
-    private boolean isWalking;
-    private boolean isInFinish;
-
-    private int stopPosition;
-    boolean backOnStart = false;
-    boolean isGoingToFall = false;
+    private int x, y, baseY, width, height, groundDistance, stopPosition, offset = 32;
+    private boolean isWalking, isInFinish, isGoingToFall, backOnStart, scored, chocolated, flipped, dead;
 
     private Ground ground;
-
-    private static Player instance = null;
-
-    private boolean scored;
-    private boolean chocolated;
-    private boolean flipped;
-    private boolean dead;
-
     private Stick stick;
+    //endregion
+
+    //region Singleton and Constructor
+    private static Player instance = null;
 
     public static Player getInstance(Ground ground, Resources res)  {
         if (instance == null)
@@ -53,38 +44,23 @@ public class Player implements IDrawable, ICollidable {
     }
 
     private Player(Ground ground, Resources res) {
-        mainSprite = BitmapFactory.decodeResource(res, R.drawable.idle);
+        this.mainSprite = BitmapFactory.decodeResource(res, R.drawable.idle);
 
-        width = mainSprite.getWidth() / 5;
-        height = mainSprite.getHeight() / 5;
+        this.width  = mainSprite.getWidth() / 5;
+        this.height = mainSprite.getHeight() / 5;
 
         mainSprite = Bitmap.createScaledBitmap(mainSprite, width, height, false);
 
         reset();
 
         this.ground = ground;
-        groundDistance = this.ground.getEndX() - offset;
-
-        stopPosition = SettingsManager.getInstance().getScreenX();
+        this.groundDistance = this.ground.getEndX() - offset;
+        this.stopPosition = SettingsManager.getInstance().getScreenX();
     }
+    //endregion
 
-    public void reset() {
-        dead = isWalking = isInFinish = isGoingToFall = chocolated = scored = false;
-
-        if(flipped) {
-            flip();
-            flipped = false;
-        }
-
-        if(stick != null)
-            stick.reset();
-
-        y = (int) (SettingsManager.getInstance().getScreenY() / 1.7);
-        baseY = y;
-        x = offset;
-    }
-
-
+    //region Overrides
+    @Override
     public void update(int deltaTime, Stick stick, DestinationGround dest) {
         this.stick = stick;
         Point stickEnd = stick.getEnd();
@@ -148,25 +124,44 @@ public class Player implements IDrawable, ICollidable {
     public void draw(Canvas canvas, Paint paint) {
         canvas.drawBitmap(this.mainSprite, this.x, this.y, paint);
     }
+    //endregion
 
+    public void reset() {
+        dead = isWalking = isInFinish = isGoingToFall = chocolated = scored = false;
 
-    //region Getters & Setters
-    public Bitmap getPlayer() {
-        return mainSprite;
+        if(flipped) {
+            flip();
+            flipped = false;
+        }
+
+        if(stick != null)
+            stick.reset();
+
+        y = (int) (SettingsManager.getInstance().getScreenY() / 1.7);
+        baseY = y;
+        x = offset;
     }
 
-    public int getPlayerBottom() {
-        return this.baseY + this.height - 30;
+    public void flipIfWalkingOnStick(Stick stick) {
+        if(Player.getInstance().isWalking() && stick.isLyingDown())
+            Player.getInstance().flip();
     }
 
-    //TODO opakujuce sa moveX
+    private void flip() {
+        Matrix matrix = new Matrix();
+        matrix.postScale( 1, -1 , width / 2f, height / 2f);
+        mainSprite = Bitmap.createBitmap(mainSprite, 0, 0, width, height, matrix, true);
+        flipped = !flipped;
+        this.y = flipped ? getPlayerBottom() - 30 : (int) (SettingsManager.getInstance().getScreenY() / 1.7);
+    }
+
     public void moveX(int translation) {
         this.x += translation;
     }
 
-    //generated Getters & Setters
-    public boolean isWalking() {
-        return isWalking;
+    //region Getters & Setters
+    public int getPlayerBottom() {
+        return this.baseY + this.height - 30;
     }
 
     public int getX() {
@@ -185,8 +180,8 @@ public class Player implements IDrawable, ICollidable {
         return height;
     }
 
-    public void setWalking(boolean walking) {
-        isWalking = walking;
+    public boolean isWalking() {
+        return isWalking;
     }
 
     public boolean isInFinish() {
@@ -197,14 +192,6 @@ public class Player implements IDrawable, ICollidable {
         return scored;
     }
 
-    public void setScored(boolean scored) {
-        this.scored = scored;
-    }
-
-    public void setChocolated(boolean chocolated) {
-        this.chocolated = chocolated;
-    }
-
     public boolean isChocolated() {
         return chocolated;
     }
@@ -213,17 +200,20 @@ public class Player implements IDrawable, ICollidable {
         return backOnStart;
     }
 
-    public void flip() {
-        Matrix matrix = new Matrix();
-        matrix.postScale( 1, -1 , width / 2f, height / 2f);
-        mainSprite = Bitmap.createBitmap(mainSprite, 0, 0, width, height, matrix, true);
-        flipped = !flipped;
-        this.y = flipped ? getPlayerBottom() - 30 : (int) (SettingsManager.getInstance().getScreenY() / 1.7);
-    }
-
     public boolean isDead() {
         return dead;
     }
 
+    public void setScored(boolean scored) {
+        this.scored = scored;
+    }
+
+    public void setChocolated(boolean chocolated) {
+        this.chocolated = chocolated;
+    }
+
+    public void setWalking(boolean walking) {
+        isWalking = walking;
+    }
     //endregion
 }

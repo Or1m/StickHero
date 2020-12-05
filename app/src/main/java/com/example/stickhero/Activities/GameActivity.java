@@ -2,35 +2,58 @@ package com.example.stickhero.Activities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.widget.TextView;
 
 import com.example.stickhero.GameView;
 import com.example.stickhero.R;
+import com.example.stickhero.ShakeDetector;
 
 public class GameActivity extends BaseActivity {
 
+    //region Private Variables
     private GameView gameView;
-
     private TextView chocoView, scoreView;
 
+    private SensorManager sensorManager;
+    private Sensor accelerometer;
+    private ShakeDetector shakeDetector;
+    //endregion
+
+    //region Creating and Initialization
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        gameView = findViewById(R.id.gameView);
+        chocoView = findViewById(R.id.chocoView);
+        scoreView = findViewById(R.id.scoreVIew);
+        gameView  = findViewById(R.id.gameView);
+
         gameView.setActivity(this);
         gameView.setMuted(muted);
 
-        chocoView = findViewById(R.id.chocoView);
-        scoreView = findViewById(R.id.scoreVIew);
+        initShakeDetector();
     }
 
+    private void initShakeDetector() {
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        shakeDetector = new ShakeDetector();
+
+        shakeDetector.setOnShakeListener(count -> gameView.onShake());
+    }
+    //endregion
+
+    //region Activity Overrides
     @Override
     protected void onResume() {
         super.onResume();
         gameView.onResume();
+
+        sensorManager.registerListener(shakeDetector, accelerometer, SensorManager.SENSOR_DELAY_UI);
     }
 
     @Override
@@ -38,6 +61,13 @@ public class GameActivity extends BaseActivity {
         super.onPause();
         gameView.onPause();
 
+        sensorManager.unregisterListener(shakeDetector);
+
+        updateSharedPrefs();
+    }
+    //endregion
+
+    private void updateSharedPrefs() {
         SharedPreferences.Editor editor = sharedpreferences.edit();
 
         int oldScore = sharedpreferences.getInt(score, 0);
@@ -52,6 +82,7 @@ public class GameActivity extends BaseActivity {
         editor.putBoolean(isMuted, muted);
         editor.apply();
     }
+
 
     public GameView getGameView() {
         return gameView;

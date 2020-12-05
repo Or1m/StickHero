@@ -44,21 +44,21 @@ public class GameView extends SurfaceView implements Runnable {
     //region Constructors & Init
     public GameView(Context context) {
         super(context);
-        init(context);
+        init();
     }
 
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context);
+        init();
     }
 
     public GameView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init(context);
+        init();
     }
 
 
-    private void init(Context context) {
+    private void init() {
         this.paint = new Paint();
 
         drawables = new IDrawable[7];
@@ -191,8 +191,7 @@ public class GameView extends SurfaceView implements Runnable {
                     if(!Player.getInstance().isWalking() && !((Stick) drawables[6]).isFalling())
                         ((Stick) drawables[6]).setGrowing(true);
 
-                    if(Player.getInstance().isWalking() && ((Stick) drawables[6]).isLyingDown())
-                        Player.getInstance().flip();
+                    Player.getInstance().flipIfWalkingOnStick((Stick) drawables[6]);
 
                     break;
 
@@ -226,6 +225,10 @@ public class GameView extends SurfaceView implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public void onShake() {
+        Player.getInstance().flipIfWalkingOnStick((Stick) drawables[6]);
     }
     //endregion
 

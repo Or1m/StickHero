@@ -5,8 +5,6 @@ import android.util.DisplayMetrics;
 
 public class SettingsManager {
 
-    private static SettingsManager instance = null;
-
     //region Private Final Variables
     private final double gravity     = 0.2;
     private final double movingSpeed = 0.7;
@@ -18,6 +16,9 @@ public class SettingsManager {
 
     private final int screenX, screenY, destMin;
     //endregion
+
+    //region Singleton and Constructor
+    private static SettingsManager instance = null;
 
     private SettingsManager() {
         DisplayMetrics dm = Resources.getSystem().getDisplayMetrics();
@@ -33,6 +34,7 @@ public class SettingsManager {
 
         return instance;
     }
+    //endregion
 
     //region Getters
     public int getScreenX() {
