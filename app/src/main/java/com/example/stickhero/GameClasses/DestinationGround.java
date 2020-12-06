@@ -15,7 +15,7 @@ public class DestinationGround extends Ground {
     //region Overrides
     @Override
     public void reset() {
-        int widthMin = SettingsManager.getInstance().getDestMinWidth();
+        int widthMin = SettingsManager.getInstance().getMinWidthDependingOnDifficulty();
         int widthMax = SettingsManager.getInstance().getDestMaxWidth();
 
         width = (int) (Math.random() * (widthMax - widthMin + 1) + widthMin);

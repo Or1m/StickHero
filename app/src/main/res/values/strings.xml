@@ -15,4 +15,7 @@
     <string name="high_score">High Score:</string>
     <string name="reset_progress">resetProgress</string>
     <string name="reset_progress_label">Reset progress</string>
+    <string name="elementimgview">elementImgView</string>
+    <string name="name">Boy</string>
+    <string name="price">Price:</string>
 </resources>

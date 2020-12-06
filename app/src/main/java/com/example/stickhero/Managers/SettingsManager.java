@@ -6,14 +6,16 @@ import android.util.DisplayMetrics;
 public class SettingsManager {
 
     //region Private Final Variables
-    private final double gravity     = 0.2;
-    private final double movingSpeed = 0.7;
+    private final double gravity      = 0.2;
+    private final double movingSpeed  = 0.7;
     private final double fallingSpeed = 20;
 
-    private final int groundWidth    = 200;
-    private final int bcgSpeed       = -24;
-    private final int destMinWidth   = 30;
-    private final int destMaxWidth   = 250;
+    private final int groundWidth     = 200;
+    private final int bcgSpeed        = -24;
+    private final int destMinWidth    = 30;
+    private final int destMaxWidth    = 250;
+
+    private int difficulty            = 100;
 
     private final int screenX, screenY, destMin;
     //endregion
@@ -76,6 +78,10 @@ public class SettingsManager {
 
     public double getFallingSpeed() {
         return fallingSpeed;
+    }
+
+    public int getMinWidthDependingOnDifficulty() {
+        return difficulty > destMinWidth ? --difficulty : destMinWidth;
     }
 
     //endregion

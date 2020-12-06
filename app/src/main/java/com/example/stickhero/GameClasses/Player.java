@@ -86,7 +86,7 @@ public class Player implements IDrawable, ICollidable {
             stick.reset();
         }
 
-        if(stick.isLyingDown() && !dest.isInBounds(stickEnd.x) && (this.x + width / 3) < stick.getEnd().x) {
+        if((stick.isLyingDown() && !dest.isInBounds(stickEnd.x) && (this.x + width / 3) < stick.getEnd().x)) {
             this.setWalking(true);
             this.moveX((int)(SettingsManager.getInstance().getMovingSpeed() * deltaTime));
             isGoingToFall = true;
