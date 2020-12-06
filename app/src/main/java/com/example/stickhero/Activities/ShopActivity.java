@@ -7,15 +7,19 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.stickhero.Customs.MyListView;
+import com.example.stickhero.Customs.ShopItem;
 import com.example.stickhero.R;
 
 public class ShopActivity extends AppCompatActivity {
 
     ListView listView;
 
-    String[] names  = {"Girl", "Ninja", "Zombie male", "Zombie female"};
-    int[] prices    = {15 , 50, 150, 300};
-    int[] imgIDs    = {R.drawable.girl, R.drawable.ninja, R.drawable.zombie_male, R.drawable.zombie_female};
+    ShopItem[] items = {
+            new ShopItem("Girl", 15, R.drawable.girl),
+            new ShopItem("Ninja", 50, R.drawable.ninja),
+            new ShopItem("Zombie male", 150, R.drawable.zombie_male),
+            new ShopItem("Zombie female", 300, R.drawable.zombie_female),
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,12 +27,14 @@ public class ShopActivity extends AppCompatActivity {
         setContentView(R.layout.activity_shop);
 
         listView = findViewById(R.id.listShop);
-        MyListView myListView = new MyListView(this, names, prices, imgIDs);
+        MyListView myListView = new MyListView(this, items);
         listView.setAdapter(myListView);
 
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            String vvv = (String) listView.getItemAtPosition(position);
-            Toast.makeText(getApplicationContext(), vvv, Toast.LENGTH_SHORT).show();
+            ShopItem item = (ShopItem) listView.getItemAtPosition(position);
+            Toast.makeText(getApplicationContext(), String.valueOf(item.getPrice()), Toast.LENGTH_SHORT).show();
+
+            //TODO zistit pocet cokoladiek u seba asi z preferences nech to netreba posielat a ked je dost tak ulozit do prefs novy sprite ten nacitavat pri vytvarani playera
         });
     }
 }

@@ -14,21 +14,17 @@ import androidx.annotation.Nullable;
 
 import com.example.stickhero.R;
 
-public class MyListView extends ArrayAdapter<String> {
+public class MyListView extends ArrayAdapter<ShopItem> {
 
-    private String[] names;
-    private int[] prices;
-    private int[] imgIDs;
+    ShopItem[] items;
 
     private Activity context;
 
-    public MyListView(Activity context, String[] names, int[] prices, int[] imgIDs) {
-        super(context, R.layout.list_element_layout, names);
+    public MyListView(Activity context, ShopItem[] items) {
+        super(context, R.layout.list_element_layout, items);
 
         this.context = context;
-        this.names = names;
-        this.prices = prices;
-        this.imgIDs = imgIDs;
+        this.items = items;
     }
 
     @SuppressLint("InflateParams")
@@ -49,9 +45,9 @@ public class MyListView extends ArrayAdapter<String> {
             viewHolder = (ViewHolder) v.getTag();
         }
 
-        viewHolder.imageView.setImageResource(imgIDs[position]);
-        viewHolder.textView1.setText(names[position]);
-        viewHolder.textView2.setText(String.valueOf(prices[position]));
+        viewHolder.imageView.setImageResource(items[position].getImgID());
+        viewHolder.textView1.setText(items[position].getName());
+        viewHolder.textView2.setText(String.valueOf(items[position].getPrice()));
 
 
         return v;
@@ -66,18 +62,6 @@ public class MyListView extends ArrayAdapter<String> {
             imageView = v.findViewById(R.id.elementImgView);
             textView1 = v.findViewById(R.id.name);
             textView2 = v.findViewById(R.id.price);
-        }
-
-        public ImageView getImageView() {
-            return imageView;
-        }
-
-        public TextView getTextView1() {
-            return textView1;
-        }
-
-        public TextView getTextView2() {
-            return textView2;
         }
     }
 }
