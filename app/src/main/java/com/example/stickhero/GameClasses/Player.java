@@ -126,6 +126,7 @@ public class Player implements IDrawable, ICollidable {
     }
     //endregion
 
+    //region Manipulating Methods
     public void reset() {
         dead = isWalking = isInFinish = isGoingToFall = chocolated = scored = false;
 
@@ -180,6 +181,7 @@ public class Player implements IDrawable, ICollidable {
     public void moveX(int translation) {
         this.x += translation;
     }
+    //endregion
 
     //region Getters & Setters
     public int getPlayerBottom() {

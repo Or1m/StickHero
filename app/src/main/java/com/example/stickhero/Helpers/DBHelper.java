@@ -12,18 +12,21 @@ import java.util.ArrayList;
 
 public class DBHelper extends SQLiteOpenHelper {
 
+    //region Private Static Final Variables
     public static final String DATABASE_NAME = "SHOPITEMS.db";
-    public static final String TABLE_NAME = "items";
+    public static final String TABLE_NAME    = "items";
 
     public static final String ITEM_COLUMN_ID    = "id";
     public static final String ITEM_COLUMN_NAME  = "name";
     public static final String ITEM_COLUMN_PRICE = "price";
     public static final String ITEM_COLUMN_IMGID = "imgID";
+    //endregion
 
     public DBHelper(Context context)  {
         super(context, DATABASE_NAME, null, 1);
     }
 
+    //region Overrides
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + TABLE_NAME + " (" + ITEM_COLUMN_ID + " INTEGER PRIMARY KEY, " + ITEM_COLUMN_NAME + " TEXT, " + ITEM_COLUMN_PRICE + " INTEGER, " + ITEM_COLUMN_IMGID + " INTEGER)");
@@ -34,7 +37,9 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(db);
     }
+    //endregion
 
+    //region DB Manipulation Methods
     public boolean insertItem(ShopItem item)  {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -47,17 +52,6 @@ public class DBHelper extends SQLiteOpenHelper {
         return insertedId != -1;
     }
 
-    public boolean deleteItem(int id) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(TABLE_NAME, ITEM_COLUMN_ID + "= " + id, null) > 0;
-    }
-
-
-    public Cursor getData(int id) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        return db.rawQuery("select * from " + TABLE_NAME + " where " + ITEM_COLUMN_ID + "= " + id + "", null);
-    }
-
     public boolean updateItem(ShopItem item) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -67,6 +61,23 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(ITEM_COLUMN_IMGID, item.getImgID());
 
         return db.update(TABLE_NAME, contentValues, ITEM_COLUMN_ID + "= " + item.getID(), null) > 0;
+    }
+
+    public boolean deleteItem(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_NAME, ITEM_COLUMN_ID + "= " + id, null) > 0;
+    }
+
+    public int removeAll()  {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_NAME, "1", null);
+    }
+    //endregion
+
+    //region DB Select Methods
+    public Cursor getData(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery("select * from " + TABLE_NAME + " where " + ITEM_COLUMN_ID + "= " + id + "", null);
     }
 
     public ArrayList<ShopItem> getItemList() {
@@ -90,9 +101,5 @@ public class DBHelper extends SQLiteOpenHelper {
         res.close();
         return arrayList;
     }
-
-    public int removeAll()  {
-        SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(TABLE_NAME, "1", null);
-    }
+    //endregion
 }

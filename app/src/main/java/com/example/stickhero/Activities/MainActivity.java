@@ -15,9 +15,9 @@ import com.example.stickhero.R;
 
 public class MainActivity extends BaseActivity {
 
-    ImageButton play, about, sound, settings, shop, reset;
-    MySettingsFragment fragment;
-    TextView counter;
+    private ImageButton play, about, sound, settings, shop;
+    private MySettingsFragment fragment;
+    private TextView counter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +30,6 @@ public class MainActivity extends BaseActivity {
         settings = findViewById(R.id.settings);
         shop     = findViewById(R.id.shop);
         counter  = findViewById(R.id.counter);
-        reset    = findViewById(R.id.resetButton);
 
         muted = SaveLoadManager.getInstance().getMuted();
         setCounter();
@@ -40,7 +39,6 @@ public class MainActivity extends BaseActivity {
 
         setUpListeners();
     }
-
 
     @SuppressLint("ClickableViewAccessibility")
     private void setUpListeners() {

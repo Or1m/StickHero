@@ -45,11 +45,9 @@ public class Background implements IDrawable {
         x += translation;
     }
 
-
     public boolean isNotVisible() {
         return this.x + this.background.getWidth() <= 0;
     }
-
 
     public void setX(int x) {
         this.x = x;

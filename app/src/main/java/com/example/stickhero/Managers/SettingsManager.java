@@ -23,19 +23,19 @@ public class SettingsManager {
     //region Singleton and Constructor
     private static SettingsManager instance = null;
 
+    public static SettingsManager getInstance()  {
+        if (instance == null)
+            instance = new SettingsManager();
+
+        return instance;
+    }
+
     private SettingsManager() {
         DisplayMetrics dm = Resources.getSystem().getDisplayMetrics();
         this.screenX = dm.widthPixels;
         this.screenY = dm.heightPixels;
 
         destMin = 300;
-    }
-
-    public static SettingsManager getInstance()  {
-        if (instance == null)
-            instance = new SettingsManager();
-
-        return instance;
     }
     //endregion
 
@@ -54,10 +54,6 @@ public class SettingsManager {
 
     public int getDestMin() {
         return destMin;
-    }
-
-    public int getDestMinWidth() {
-        return destMinWidth;
     }
 
     public int getDestMaxWidth() {
@@ -80,9 +76,9 @@ public class SettingsManager {
         return fallingSpeed;
     }
 
+
     public int getMinWidthDependingOnDifficulty() {
         return difficulty > destMinWidth ? --difficulty : destMinWidth;
     }
-
     //endregion
 }

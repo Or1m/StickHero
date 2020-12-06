@@ -3,7 +3,6 @@ package com.example.stickhero.Helpers;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.widget.Toast;
 
 import com.example.stickhero.Activities.GameActivity;

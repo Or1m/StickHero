@@ -18,11 +18,6 @@ public class SaveLoadManager {
     //region Singleton and Constructor
     private static SaveLoadManager instance = null;
 
-    private SaveLoadManager(Context context) {
-        if(context != null)
-            sharedpreferences = context.getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-    }
-
     public static SaveLoadManager getInstance(Context context)  {
         if (instance == null)
             instance = new SaveLoadManager(context);
@@ -36,8 +31,14 @@ public class SaveLoadManager {
 
         return instance;
     }
+
+    private SaveLoadManager(Context context) {
+        if(context != null)
+            sharedpreferences = context.getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+    }
     //endregion
 
+    //region SharedPrefs Manipulation Methods
     public void updateSharedPrefs(int newScore, int newChocolates, boolean muted) {
         SharedPreferences.Editor editor = sharedpreferences.edit();
 
@@ -63,6 +64,7 @@ public class SaveLoadManager {
     public void subtractChocolates(int price) {
         sharedpreferences.edit().putInt(chocolates, this.getChocolates() - price).apply();
     }
+    //endregion
 
     //region Getters and Setters
     public boolean getMuted() {

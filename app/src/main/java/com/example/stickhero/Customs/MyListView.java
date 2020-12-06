@@ -16,8 +16,7 @@ import com.example.stickhero.R;
 
 public class MyListView extends ArrayAdapter<ShopItem> {
 
-    ShopItem[] items;
-
+    private ShopItem[] items;
     private Activity context;
 
     public MyListView(Activity context, ShopItem[] items) {
@@ -32,7 +31,7 @@ public class MyListView extends ArrayAdapter<ShopItem> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View v = convertView;
-        ViewHolder viewHolder = null;
+        ViewHolder viewHolder;
 
         if(v == null) {
             LayoutInflater layoutInflater = context.getLayoutInflater();
@@ -53,6 +52,7 @@ public class MyListView extends ArrayAdapter<ShopItem> {
         return v;
     }
 
+    //region Static Inner Class ViewHolder
     public static class ViewHolder {
         ImageView imageView;
         TextView textView1;
@@ -64,4 +64,5 @@ public class MyListView extends ArrayAdapter<ShopItem> {
             textView2 = v.findViewById(R.id.price);
         }
     }
+    //endregion
 }

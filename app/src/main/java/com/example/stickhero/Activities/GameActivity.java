@@ -1,7 +1,6 @@
 package com.example.stickhero.Activities;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
@@ -73,7 +72,6 @@ public class GameActivity extends BaseActivity {
                 Integer.parseInt(scoreView.getText().toString()),
                 Integer.parseInt(chocoView.getText().toString()), muted);
     }
-
 
     public GameView getGameView() {
         return gameView;
