@@ -1,4 +1,4 @@
-package com.example.stickhero;
+package com.example.stickhero.Customs;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -23,6 +23,9 @@ import com.example.stickhero.GameClasses.DestinationGround;
 import com.example.stickhero.GameClasses.Ground;
 import com.example.stickhero.GameClasses.Player;
 import com.example.stickhero.GameClasses.Stick;
+import com.example.stickhero.Helpers.Alerts;
+import com.example.stickhero.Helpers.SettingsManager;
+import com.example.stickhero.R;
 
 @SuppressLint("ViewConstructor")
 public class GameView extends SurfaceView implements Runnable {

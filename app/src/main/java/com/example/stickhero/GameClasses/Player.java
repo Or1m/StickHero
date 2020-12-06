@@ -12,7 +12,7 @@ import android.util.Log;
 import com.example.stickhero.Behaviour.ICollidable;
 import com.example.stickhero.Behaviour.IDrawable;
 import com.example.stickhero.R;
-import com.example.stickhero.SettingsManager;
+import com.example.stickhero.Helpers.SettingsManager;
 
 public class Player implements IDrawable, ICollidable {
 
@@ -44,7 +44,7 @@ public class Player implements IDrawable, ICollidable {
     }
 
     private Player(Ground ground, Resources res) {
-        this.mainSprite = BitmapFactory.decodeResource(res, R.drawable.idle);
+        this.mainSprite = BitmapFactory.decodeResource(res, R.drawable.boy);
 
         this.width  = mainSprite.getWidth() / 5;
         this.height = mainSprite.getHeight() / 5;

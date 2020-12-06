@@ -5,7 +5,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 import com.example.stickhero.Behaviour.IDrawable;
-import com.example.stickhero.SettingsManager;
+import com.example.stickhero.Helpers.SettingsManager;
 
 public class Ground implements IDrawable {
 

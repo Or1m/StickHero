@@ -1,4 +1,4 @@
-package com.example.stickhero;
+package com.example.stickhero.Helpers;
 
 import android.content.res.Resources;
 import android.util.DisplayMetrics;

@@ -9,9 +9,7 @@ import android.graphics.Paint;
 import com.example.stickhero.Behaviour.ICollidable;
 import com.example.stickhero.Behaviour.IDrawable;
 import com.example.stickhero.R;
-import com.example.stickhero.SettingsManager;
-
-import java.util.Set;
+import com.example.stickhero.Helpers.SettingsManager;
 
 public class Chocolate implements IDrawable, ICollidable {
 

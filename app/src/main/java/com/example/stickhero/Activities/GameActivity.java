@@ -7,9 +7,9 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.example.stickhero.GameView;
+import com.example.stickhero.Customs.GameView;
 import com.example.stickhero.R;
-import com.example.stickhero.ShakeDetector;
+import com.example.stickhero.Customs.ShakeDetector;
 
 public class GameActivity extends BaseActivity {
 

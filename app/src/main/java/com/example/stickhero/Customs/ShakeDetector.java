@@ -1,4 +1,4 @@
-package com.example.stickhero;
+package com.example.stickhero.Customs;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;

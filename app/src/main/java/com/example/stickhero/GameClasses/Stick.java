@@ -5,8 +5,8 @@ import android.graphics.Paint;
 import android.graphics.Point;
 
 import com.example.stickhero.Behaviour.IDrawable;
-import com.example.stickhero.SettingsManager;
-import com.example.stickhero.Utils;
+import com.example.stickhero.Helpers.SettingsManager;
+import com.example.stickhero.Helpers.Utils;
 
 public class Stick implements IDrawable {
 

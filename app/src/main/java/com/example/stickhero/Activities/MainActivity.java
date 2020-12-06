@@ -3,15 +3,12 @@ package com.example.stickhero.Activities;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.example.stickhero.Alerts;
+import com.example.stickhero.Helpers.Alerts;
 import com.example.stickhero.Fragments.MySettingsFragment;
 import com.example.stickhero.R;
 
