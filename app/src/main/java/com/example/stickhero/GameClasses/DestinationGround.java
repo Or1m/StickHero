@@ -4,7 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-import com.example.stickhero.Helpers.SettingsManager;
+import com.example.stickhero.Managers.SettingsManager;
 
 public class DestinationGround extends Ground {
 

@@ -7,21 +7,24 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.util.Log;
 
 import com.example.stickhero.Behaviour.ICollidable;
 import com.example.stickhero.Behaviour.IDrawable;
+import com.example.stickhero.Managers.SaveLoadManager;
 import com.example.stickhero.R;
-import com.example.stickhero.Helpers.SettingsManager;
+import com.example.stickhero.Managers.SettingsManager;
 
 public class Player implements IDrawable, ICollidable {
 
     //region Private Variables
     private Bitmap mainSprite;
 
-    private int x, y, baseY, width, height, groundDistance, stopPosition, offset = 32;
+    private int x, y, baseY, width, height, groundDistance, stopPosition, offsetY, offsetX;
     private boolean isWalking, isInFinish, isGoingToFall, backOnStart, scored, chocolated, flipped, dead;
 
+    private double internalFallingSpeed;
+
+    private Resources resources;
     private Ground ground;
     private Stick stick;
     //endregion
@@ -44,18 +47,13 @@ public class Player implements IDrawable, ICollidable {
     }
 
     private Player(Ground ground, Resources res) {
-        this.mainSprite = BitmapFactory.decodeResource(res, R.drawable.boy);
-
-        this.width  = mainSprite.getWidth() / 5;
-        this.height = mainSprite.getHeight() / 5;
-
-        mainSprite = Bitmap.createScaledBitmap(mainSprite, width, height, false);
+        this.resources = res;
 
         reset();
 
         if(ground != null) {
             this.ground = ground;
-            this.groundDistance = this.ground.getEndX() - offset;
+            this.groundDistance = this.ground.getEndX() - offsetX;
             this.stopPosition = SettingsManager.getInstance().getScreenX();
         }
     }
@@ -72,13 +70,13 @@ public class Player implements IDrawable, ICollidable {
             backOnStart = true;
         }
 
-        if(isInFinish && this.x > offset) {
+        if(isInFinish && this.x > offsetX) {
             this.moveX((int)(-SettingsManager.getInstance().getMovingSpeed() * deltaTime));
             return;
         }
 
         if(isInFinish) {
-            this.x = offset;
+            this.x = offsetX;
             this.chocolated = false;
             this.isInFinish = false;
             this.backOnStart = false;
@@ -99,8 +97,8 @@ public class Player implements IDrawable, ICollidable {
             this.dead = true;
 
         if(isGoingToFall) {
-            this.y += 20;
-            Log.d("TAG", String.valueOf(this.y));
+            this.internalFallingSpeed += SettingsManager.getInstance().getGravity() * 30;
+            this.y += this.internalFallingSpeed;
 
             if(isWalking) {
                 this.isWalking = false;
@@ -124,7 +122,7 @@ public class Player implements IDrawable, ICollidable {
 
     @Override
     public void draw(Canvas canvas, Paint paint) {
-        canvas.drawBitmap(this.mainSprite, this.x, this.y, paint);
+        canvas.drawBitmap(this.mainSprite, this.x, this.y + offsetY, paint);
     }
     //endregion
 
@@ -136,12 +134,34 @@ public class Player implements IDrawable, ICollidable {
             flipped = false;
         }
 
+        this.internalFallingSpeed = SettingsManager.getInstance().getFallingSpeed();
+
         if(stick != null)
             stick.reset();
 
         y = (int) (SettingsManager.getInstance().getScreenY() / 1.7);
         baseY = y;
-        x = offset;
+        x = offsetX;
+
+        resetSprite();
+    }
+
+    private void resetSprite() {
+        if(SaveLoadManager.getInstance().getCharacter() == 0) {
+            this.mainSprite = BitmapFactory.decodeResource(this.resources, R.drawable.boy);
+            this.offsetY = 0;
+            this.offsetX = 32;
+        }
+        else {
+            this.mainSprite = BitmapFactory.decodeResource(this.resources, SaveLoadManager.getInstance().getCharacter());
+            this.offsetY = -25;
+            this.offsetX = 0;
+        }
+
+        this.width  = mainSprite.getWidth() / 5;
+        this.height = mainSprite.getHeight() / 5;
+
+        this.mainSprite = Bitmap.createScaledBitmap(mainSprite, width, height, false);
     }
 
     public void flipIfWalkingOnStick(Stick stick) {

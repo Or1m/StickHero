@@ -24,7 +24,7 @@ import com.example.stickhero.GameClasses.Ground;
 import com.example.stickhero.GameClasses.Player;
 import com.example.stickhero.GameClasses.Stick;
 import com.example.stickhero.Helpers.Alerts;
-import com.example.stickhero.Helpers.SettingsManager;
+import com.example.stickhero.Managers.SettingsManager;
 import com.example.stickhero.R;
 
 @SuppressLint("ViewConstructor")
@@ -99,7 +99,7 @@ public class GameView extends SurfaceView implements Runnable {
     final Runnable showDeadDialog = new Runnable() {
         @Override
         public void run() {
-            AlertDialog alert = Alerts.CreateGameAlert(activity, thread);
+            AlertDialog alert = Alerts.createGameAlert(activity, thread);
             alert.show();
         }
     };

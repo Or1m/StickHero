@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.stickhero.Helpers.Alerts;
 import com.example.stickhero.Fragments.MySettingsFragment;
+import com.example.stickhero.Managers.SaveLoadManager;
 import com.example.stickhero.R;
 
 public class MainActivity extends BaseActivity {
@@ -31,8 +32,8 @@ public class MainActivity extends BaseActivity {
         counter  = findViewById(R.id.counter);
         reset    = findViewById(R.id.resetButton);
 
-        muted = sharedpreferences.getBoolean(isMuted, false);
-        counter.setText(String.valueOf(sharedpreferences.getInt(chocolates, 0)));
+        muted = SaveLoadManager.getInstance().getMuted();
+        setCounter();
 
         if(muted)
             darken(sound, 100);
@@ -97,7 +98,7 @@ public class MainActivity extends BaseActivity {
                 if(!muted)
                     mediaPlayer.start();
 
-                fragment = new MySettingsFragment(sharedpreferences.getInt(score, 0));
+                fragment = new MySettingsFragment(SaveLoadManager.getInstance().getScore());
                 fragment.show(getSupportFragmentManager(), "MyFragment");
             }
 
@@ -122,7 +123,7 @@ public class MainActivity extends BaseActivity {
     //region Activity Overrides
     @Override
     public void onBackPressed() {
-        AlertDialog alert = Alerts.CreateMainMenuAlert( this);
+        AlertDialog alert = Alerts.createMainMenuAlert( this);
         alert.show();
     }
 
@@ -130,12 +131,17 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
 
-        counter.setText(String.valueOf(sharedpreferences.getInt(chocolates, 0)));
+        counter.setText(String.valueOf(SaveLoadManager.getInstance().getChocolates()));
     }
     //endregion
 
     public void resetButtonOnClick(View view) {
-        sharedpreferences.edit().remove(score).apply();
-        fragment.redrawScore(sharedpreferences.getInt(score, 0));
+        SaveLoadManager.getInstance().clearPrefs();
+        fragment.redrawScore(SaveLoadManager.getInstance().getScore());
+        setCounter();
+    }
+
+    private void setCounter() {
+        counter.setText(String.valueOf(SaveLoadManager.getInstance().getChocolates()));
     }
 }

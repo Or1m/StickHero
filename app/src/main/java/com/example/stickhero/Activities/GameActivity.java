@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.example.stickhero.Customs.GameView;
+import com.example.stickhero.Managers.SaveLoadManager;
 import com.example.stickhero.R;
 import com.example.stickhero.Customs.ShakeDetector;
 
@@ -68,19 +69,9 @@ public class GameActivity extends BaseActivity {
     //endregion
 
     private void updateSharedPrefs() {
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-
-        int oldScore = sharedpreferences.getInt(score, 0);
-        int newScore = Integer.parseInt(scoreView.getText().toString());
-        if(newScore > oldScore)
-            editor.putInt(score, newScore);
-
-        int oldChocolates = sharedpreferences.getInt(chocolates, 0);
-        int newChocolates = Integer.parseInt(chocoView.getText().toString());
-        editor.putInt(chocolates, oldChocolates + newChocolates);
-
-        editor.putBoolean(isMuted, muted);
-        editor.apply();
+        SaveLoadManager.getInstance().updateSharedPrefs(
+                Integer.parseInt(scoreView.getText().toString()),
+                Integer.parseInt(chocoView.getText().toString()), muted);
     }
 
 

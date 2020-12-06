@@ -13,18 +13,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.example.stickhero.Managers.SaveLoadManager;
 import com.example.stickhero.R;
 
 public class BaseActivity extends AppCompatActivity {
 
     //region Variables
-    public static final String MyPREFERENCES = "MyPrefs" ;
-    public static final String score = "score";
-    public static final String chocolates = "chocolates";
-    public static final String isMuted = "muted";
-
-
-    protected SharedPreferences sharedpreferences;
     protected MediaPlayer mediaPlayer;
 
     protected static boolean muted = false;
@@ -37,8 +31,9 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
 
-        mediaPlayer       = MediaPlayer.create(getApplicationContext(), R.raw.click);
-        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.click);
+
+        SaveLoadManager.getInstance(this);
     }
 
     //region Motion Event Processing

@@ -1,4 +1,4 @@
-package com.example.stickhero.Helpers;
+package com.example.stickhero.Managers;
 
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
@@ -8,6 +8,7 @@ public class SettingsManager {
     //region Private Final Variables
     private final double gravity     = 0.2;
     private final double movingSpeed = 0.7;
+    private final double fallingSpeed = 20;
 
     private final int groundWidth    = 200;
     private final int bcgSpeed       = -24;
@@ -72,5 +73,10 @@ public class SettingsManager {
     public int getBcgSpeed() {
         return bcgSpeed;
     }
+
+    public double getFallingSpeed() {
+        return fallingSpeed;
+    }
+
     //endregion
 }
