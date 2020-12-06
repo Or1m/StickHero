@@ -19,7 +19,7 @@ public class Player implements IDrawable, ICollidable {
     //region Private Variables
     private Bitmap mainSprite;
 
-    private int x, y, baseY, width, height, groundDistance, stopPosition, offsetY, offsetX;
+    private int x, y, baseY, width, height, groundDistance, stopPosition, offsetY, offsetX = 32;
     private boolean isWalking, isInFinish, isGoingToFall, backOnStart, scored, chocolated, flipped, dead;
 
     private double internalFallingSpeed;
@@ -151,16 +151,14 @@ public class Player implements IDrawable, ICollidable {
         if(SaveLoadManager.getInstance().getCharacter() == 0) {
             this.mainSprite = BitmapFactory.decodeResource(this.resources, R.drawable.boy);
             this.offsetY = 0;
-            this.offsetX = 32;
         }
         else {
             this.mainSprite = BitmapFactory.decodeResource(this.resources, SaveLoadManager.getInstance().getCharacter());
             this.offsetY = -25;
-            this.offsetX = 0;
         }
 
-        this.width  = mainSprite.getWidth() / 5;
-        this.height = mainSprite.getHeight() / 5;
+        this.width  = 212;
+        this.height = 231;
 
         this.mainSprite = Bitmap.createScaledBitmap(mainSprite, width, height, false);
     }
